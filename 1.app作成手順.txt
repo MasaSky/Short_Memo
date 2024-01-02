@@ -159,3 +159,17 @@ y-2)bundle exec rails webpacker:install:all
     <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
+
+〇Rails dbのリセット(refer to ChatGPT's answer)
+
+rails db:reset:
+データベースを完全にドロップし（削除し）、その後で最初から再作成します。これはdb:dropとdb:setupを連続で行うことに相当します。
+つまり、すべてのデータが消去され、データベースが新しい状態にリセットされ、初期データ（seeds.rbに定義されたもの）がロードされます。
+このコマンドは特に開発初期段階や、データベース構造に重大な変更があった場合に役立ちます。
+
+rails db:migrate:reset:
+データベースのマイグレーションをリセットします。具体的には、すべてのマイグレーションをロールバック（取り消し）し、その後すべてのマイグレーションを最初から適用し直します。
+つまり、db:migrate:down（すべてのマイグレーションをバージョン0にロールバック）とdb:migrate（すべてのマイグレーションを最新のものに適用）を行います。
+このコマンドは、マイグレーションファイルを修正した後や、マイグレーションの順序を確認する必要がある場合に便利です。
+
+rails db:resetはデータベース自体を削除して再作成するため、全てのデータが失われます。一方でrails db:migrate:resetはマイグレーションの状態をリセットするもので、データベース構造のみが影響を受けます。
