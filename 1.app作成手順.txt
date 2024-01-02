@@ -1,0 +1,161 @@
+1)appの作成
+2)appをアクセス可能にする
+3)Active Strageの導入
+4)deviseの導入
+5)bootstrapの導入
+6)modelの確立
+7)controllerの設定
+8)routeの設定
+9)viewの組立、Pagenationの導入
+
+
+
+==============================
+1) Establish App
+rails new ***  /// rm -rf ***
+
+2) Plug-in
+username:~/environment/*** $ yarn add @babel/plugin-proposal-private-methods @babel/plugin-proposal-private-property-in-object
+
+***/config/environment/development.rb
++++
+>>> config.hosts.clear
+
+3)Active Strageの導入
+
+3-1)<Active Storage>  environment/*** $
+rails active_storage:install
+rails db:migrate
+
+3-2)<Gemfile>Active Strage
+# gem 'image_processing', '~>1.2'
+↓
+gem 'image_processing', '~>1.2'
+>>>*** $ bundle install
+
+3-3)config/environments/development.rb
++++ config.active_job.queue_adapter = :inline
+>>>$ bundle install
+
+3-4)***/app/asses/images/
+イメージファイルを保存
+
+4)deviseの導入
+4-1)<Gemifile>devise
++++ gem 'devise'
+>>>*** $ bundle install
+>>>*** $ rails g devise:install
+
+4-2)User
+>>>*** $ rails g devise User
+
+4-3) db/migrate/（年月日時分秒）_devise_create_users.rb
++++ t.string :name
+>>> rails db:migrate
+
+5)Bootstrapの導入
+>>>$ yarn add jquery bootstrap@4.6.2 popper.js
+
+
+6)modelの確立
+Create 'model' --name with initial cap & singular 
+rails g model ***
+// app/model/***.rb
+---rails destroy model ***
+>>>rails db:rollback
+
+〇バリデーション設定
+app/models/***.rb
++++
+  validates :title, presence: true
+  validates :body, presence: true
+
+<<<<
+モデル名	単数形、先頭は英大文字	List
+モデルのファイル名	単数形、先頭は英小文字	list.rb
+テーブル名	複数形、先頭は英小文字	list
+<<<<
+
+ad/migrate/YYYYNNDDHHMM_create_***.rb (Table Info)
++++
+      t.string :title
+      t.string :body
+>> rails db:migrate
+>> schema.rbで確認
+
+
+7)controllerの設定
+>>>rails g controller *** top index show edit ... etc
+
+<controllerの削除>
+>>> rails destroy controller ***
+// controllers/concerns/***_controller.rb
+
+ad/migrate/YYYYNNDDHHMM_create_***.rb (Table Info)
++++
+      t.string :title
+      t.string :body
+>> rails db:migrate
+>> schema.rbで確認
+
+
+8) routeの設定
+Routing
++++ resources :***
+>>>$ rails routes
+
+***/config/routess.rb
+
+device_for :users
+root to: 'home#top'
+
+パターン①
+resources :users, only: [:show, :edit, :index, :update]
+resources :books, only: [:show, :edit, :index, :update, :new, :create, :destroy]
+
+パターン②
+  resources :post_images, only: [:new, :create, :index, :show, :destroy] do
+    resource :favorite, only: [:create, :destroy]
+    resources :post_comments, only: [:create, :destroy]
+  end
+  resources :users, only: [:show, :edit, :update]
+
+
+9)viewの組立、Pagenationの導入
+
+〇Pagenation
+>>>"Gemifile" +++ gem 'kaminari','~> 1.2.1'
+>>>$ bundle install
+>>>rails g kaminari:config
+>>>rails g kaminari:views default
+>>> " def index" ***.all => ***.page(params[:page])
+>>>+++.page(params[:page])
+>>><%= paginate post_images %>
+>>>"config/initializers/kaminari_config.rb"+++ config.default_per_page = 5
+
+
+〇Webpackerが起動しない？
+・appの外部アクセスが要因
+・Webpackerの再インストール
+>>>
+x-1)ターミナルで、Railsアプリケーションのルートディレクトリに移動します。
+x-2)bundle exec rails webpacker:installコマンドを実行します。
+
+y-1)すべての環境でWebpackerを再インストールすることもできます。
+y-2)bundle exec rails webpacker:install:all
+
+
+〇Font Awesome
+
+<script src="https://kit.fontawesome.com/56a079a110.js" crossorigin="anonymous"></script>
+
+  <head>
+    <title>BookersVer2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+　　<%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <script src="https://kit.fontawesome.com/56a079a110.js" crossorigin="anonymous"></script>
+    <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>

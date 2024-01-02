@@ -1,0 +1,42 @@
+1) Gemifile
++++ gem 'devise' (to last line)
+>>> username:~/environment/*** $ bundle install
+
+2) $ rails g devise:install
+
+3) $ rails g devise User
+=== rais g model
+
+4)db/migrate/（年月日時分秒）_devise_create_users.rb
++++ t.string :name
+>>> username:~/environment/***rails db:migrate
+
+5)config/routes.rb
++++
+devise_for :users
+root to: 'homes#top'
+
+6) $ rails g devise:views
+
+7)app/views/devise/registrations/new.html.erb
++++
+<div class="field">
+  <%= f.label :name %><br>
+  <%= f.text_field :name %>
+</div>
+
+7)app/controllers/application_controller.rb
++++
+class ApplicationController < ActionController::Base
+　before_action :configure_permitted_parameters, if: :devise_controller?
+
+  protected
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+  end
+end
+
+8)app/views/layouts/application.html.erb
++++
+<%= link_to "ログアウト", destroy_user_session_path, method: :delete %>

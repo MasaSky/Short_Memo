@@ -1,0 +1,94 @@
+●username, passwordを聞かれる→SSH
+[root@www ◯◯]# git remote set-url origin git@github.com:
+[root@www ◯◯]# 
+[root@www ◯◯]# git remote -v
+origin  git@github.com: (fetch)
+origin  git@github.com: (push)
+これでhttp通信でなくなったのが分かる。
+https://ではなくgit@になったことが重要。
+
+[root@www ◯◯]# git remote set-url origin git@github.com:△△××/◯◯△△.git
+[root@www ◯◯]# 
+[root@www ◯◯]# git remote -v
+origin  git@github.com:△△××/◯◯△△.git (fetch)
+origin  git@github.com:△△××/◯◯△△.git (push)
+これでssh通信で、ユーザー名と対象のレポジトリも含まれているのが分かる。
+
+config --list でも確認できる。
+
+[root@www ◯◯]# git config --list
+user.name=△△××
+user.email=△△××@gmail.com
+remote.origin.url=git@github.com:△△××/◯◯△△.git
+remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
+git pull で確認してみよう
+[root@www ◯◯]# git pull
+Already up-to-date.
+ユーザー名もパスワードも聞かれなくなった。
+
+●git@github.com: Permission denied (publickey).
+
+>>>ssh-keygen
+実行後に入力(パスフレーズ)を求められますが、全て未入力で Enter キーを押してください。
+>>>clip < ~/.ssh/id_rsa.pub		#---クリップボードにSSHをコピー
+>>>gitHubを開いてSSH keysの新規登録画面へ
++++ keyに貼り付け
+>>>ssh git@github.com
+The authenticity of host 'github.com (×××.×××.×××.×××)' can't be established.
+RSA key fingerprint is SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8.
+Are you sure you want to continue connecting (yes/no/[fingerprint])?
+=> yes +enter
+
+●初回登録
+$ git init                                       # 現在いるディレクトリをgitで管理するための設定ファイルを生成する。
+$ git add ファイル名                              # 「ファイル名」の部分にファイル名を指定することで、指定したファイルをインデックスに追加することができます。
+$ git commit -m "コメント"                        # メッセージをつけて変更履歴を保存する。
+$ git branch -M main                         　  # デフォルトブランチをmasterからmainに変更する。
+$ git remote add origin リポジトリURL             # originという名前でリモートリポジトリのURLを登録する。
+$ git push origin ブランチ名                      # ローカルリポジトリの変更をリモートリポジトリにアップロードする。「ブランチ名」にアップロードしたいブランチの名前を指定します。
+
+●2回目以降アップロード
+$ git add ファイル名                              # 「ファイル名」の部分にファイル名を指定することで、指定したファイルをインデックスに追加することができます。
+$ git commit -m "コメント"                        # メッセージをつけて変更履歴を保存する。
+$ git push origin ブランチ名                      # ローカルリポジトリの変更をリモートリポジトリにアップロードする。「ブランチ名」にアップロードしたいブランチの名前を指定します。
+
+●リモートから変更分をローカルに反映
+git fetch origin				  # リモートリポジトリからローカルにあるリモートリポジトリのコピーに最新情報をダウンロードする
+git merge ブランチ名				  # ローカルブランチに反映する
+git pull origin ブランチ名			  # fetchとmergeをまとめて実行できるコマンド
+
+
+●クローン作製
+$ git clone リポジトリURL                         # リモートリポジトリをローカルリポジトリに複製する（ダウンロード）
+
+●変更戻し
+git reset コミット				  # 履歴を元に前の状態に戻す。「コミット」には識別番号を指定します。git reset HEAD^で一つ前に戻すことも可能
+
+● fatal: Need to specify how to reconcile divergent branches.を解決
+ローカル ブランチにないリモートの変更がある場合は、解決する必要があります。デフォルトの Git の動作はマージです。これにより、ローカル ブランチに新しいコミットが作成され、それらの変更が解決されます。
+>>>git config pull.rebase false
+
+●コミットの上書き
+>>>git commit --amend
+
+●コミットの打ち消し
+作業ツリーを指定したコミット時点の状態にまで戻し、コミットを行う（コミットをなかったことにはせず、逆向きのコミットをすることで履歴を残す）
+>>>git revert コミットのハッシュ値
+
+●ローカルの環境を一つ前に戻す
+>>>git reset --hard HEAD
+
+●error: failed to push some refs to…'github.com:xxx'
+リモート（Github）とローカル（自分のGit）を比べた場合、リモートの方が最新だからpushできないというエラーだったようです。
+① ローカルの環境を一つ前に戻す
+ローカルで変更した処理を取り消す。最新のコミット、今回で言うmain.txtを作ったコミットを削除。
+
+git reset --hard HEAD
+② リモートのmainをローカルにpullする
+ローカルのコミット履歴とリモートのコミット履歴が途中までは同じになったようだったので、
+
+git pull origin main 
+でリモートの状態をローカルに持ってくる。
+
+③ ここまできたらあとは最初から実行
+main.textを作って、git addしてcommitして、pushする。
