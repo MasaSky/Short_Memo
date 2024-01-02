@@ -319,6 +319,24 @@ view, controller, model, db:migrate, db:schema >>>変更
     resource :favorite, only: [:create, :destroy]
     resources :post_comments, only: [:create, :destroy]
 
+***db/migrate/***reate_post_comments.rb
+  def change
+    create_table :post_comments do |t|
+      t.text :comment
+      t.integer :user_id
+      t.integer :post_image_id
+
+      t.timestamps
+    end
+  end
+
+***app/models/post_comment.rb
+class PostComment < ApplicationRecord
+  
+  belongs_to :user
+  belongs_to :post_image
+  
+end
 
 
 16)「いいね」投稿機能
@@ -353,4 +371,22 @@ view, controller, model, db:migrate, db:schema >>>変更
   <% end %>
 #---ト数字で表示される
 
+***db/migrate/_create_favorites.rb
+  def change
+    create_table :favorites do |t|
+      t.integer :user_id
+      t.integer :post_image_id
 
+      t.timestamps
+    end
+
+***app/models/favorite.rb
+
+class Favorite < ApplicationRecord
+
+  belongs_to :user
+  belongs_to :post_image
+
+  validates :user_id, uniqueness: {scope: :post_image_id}
+
+end
