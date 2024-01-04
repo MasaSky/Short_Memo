@@ -91,6 +91,11 @@ ad/migrate/YYYYNNDDHHMM_create_***.rb (Table Info)
 >>> rails destroy controller ***
 // controllers/concerns/***_controller.rb
 
+<namespace の使い方>
+username:~/environment/naganocake $ rails g controller admin/items
+#---controllerやviewなどのコードのファイルを作成する時に、adminというフォルダ内に自動的に保存するコマンドになっています。
+>>>username:~/environment/*** $ rails g controller [namespaceのグループ名]/[コントローラー名]
+
 ad/migrate/YYYYNNDDHHMM_create_***.rb (Table Info)
 +++
       t.string :title
@@ -108,6 +113,13 @@ Routing
 
 device_for :users
 root to: 'home#top'
+
+GET：データの取得
+POST：データの作成
+PUT：データの置換
+PATCH：データの更新
+DELETE：データの削除
+
 
 パターン①
 resources :users, only: [:show, :edit, :index, :update]
