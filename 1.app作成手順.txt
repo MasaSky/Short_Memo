@@ -1,63 +1,27 @@
 1)appの作成
 2)appをアクセス可能にする
-3)Active Strageの導入
-4)deviseの導入
-5)bootstrapの導入
-6)modelの確立
-7)controllerの設定
-8)routeの設定
+3)modelの確立
+4)controllerの設定
+5)routeの設定
+6)deviseの導入
+7)bootstrapの導入
+8)Active Strageの導入
 9)viewの組立、Pagenationの導入
-
-
+10)GEMIFILE
 
 ==============================
-1) Establish App
+1) appの作成
 rails new ***  /// rm -rf ***
 
-2) Plug-in
+2) appをアクセス可能にする
+Plug-in
 username:~/environment/*** $ yarn add @babel/plugin-proposal-private-methods @babel/plugin-proposal-private-property-in-object
 
 ***/config/environment/development.rb
 +++
 >>> config.hosts.clear
 
-3)Active Strageの導入
-
-3-1)<Active Storage>  environment/*** $
-rails active_storage:install
-rails db:migrate
-
-3-2)<Gemfile>Active Strage
-# gem 'image_processing', '~>1.2'
-↓
-gem 'image_processing', '~>1.2'
->>>*** $ bundle install
-
-3-3)config/environments/development.rb
-+++ config.active_job.queue_adapter = :inline
->>>$ bundle install
-
-3-4)***/app/asses/images/
-イメージファイルを保存
-
-4)deviseの導入
-4-1)<Gemifile>devise
-+++ gem 'devise'
->>>*** $ bundle install
->>>*** $ rails g devise:install
-
-4-2)User
->>>*** $ rails g devise User
-
-4-3) db/migrate/（年月日時分秒）_devise_create_users.rb
-+++ t.string :name
->>> rails db:migrate
-
-5)Bootstrapの導入
->>>$ yarn add jquery bootstrap@4.6.2 popper.js
-
-
-6)modelの確立
+3)modelの確立
 Create 'model' --name with initial cap & singular 
 rails g model ***
 // app/model/***.rb
@@ -80,12 +44,19 @@ ad/migrate/YYYYNNDDHHMM_create_***.rb (Table Info)
 +++
       t.string :title
       t.string :body
->> rails db:migrate
->> schema.rbで確認
 
+      t.string :name, null: false
+      t.text :introduction, null: false
+      t.integer :price, null: false
+      t.integer :genre_id, null: false
+      t.boolean :is_active, null: false   #---変数のデータ型の一種であり、真理値のtrue(真)とfalse(偽)の２つの値をとるデータ型
+>>> rails db:migrate
+>>> schema.rbで確認
 
-7)controllerの設定
+4)controllerの設定
 >>>rails g controller *** top index show edit ... etc
+
+new, index, create, show, edit, update, destroy
 
 <controllerの削除>
 >>> rails destroy controller ***
@@ -96,15 +67,7 @@ username:~/environment/naganocake $ rails g controller admin/items
 #---controllerやviewなどのコードのファイルを作成する時に、adminというフォルダ内に自動的に保存するコマンドになっています。
 >>>username:~/environment/*** $ rails g controller [namespaceのグループ名]/[コントローラー名]
 
-ad/migrate/YYYYNNDDHHMM_create_***.rb (Table Info)
-+++
-      t.string :title
-      t.string :body
->> rails db:migrate
->> schema.rbで確認
-
-
-8) routeの設定
+5) routeの設定
 Routing
 +++ resources :***
 >>>$ rails routes
@@ -120,7 +83,6 @@ PUT：データの置換
 PATCH：データの更新
 DELETE：データの削除
 
-
 パターン①
 resources :users, only: [:show, :edit, :index, :update]
 resources :books, only: [:show, :edit, :index, :update, :new, :create, :destroy]
@@ -131,6 +93,42 @@ resources :books, only: [:show, :edit, :index, :update, :new, :create, :destroy]
     resources :post_comments, only: [:create, :destroy]
   end
   resources :users, only: [:show, :edit, :update]
+
+6)deviseの導入
+a-1)<Gemifile>devise
++++ gem 'devise'
+>>>*** $ bundle install
+>>>*** $ rails g devise:install
+
+a-2)User
+>>>*** $ rails g devise User
+
+a-3) db/migrate/（年月日時分秒）_devise_create_users.rb
++++ t.string :name
+>>> rails db:migrate
+
+
+7)Bootstrapの導入
+>>>$ yarn add jquery bootstrap@4.6.2 popper.js
+
+8)Active Strageの導入
+
+b-1)<Active Storage>  environment/*** $
+rails active_storage:install
+rails db:migrate
+
+b-2)<Gemfile>Active Strage
+# gem 'image_processing', '~>1.2'
+↓
+gem 'image_processing', '~>1.2'
+>>>*** $ bundle install
+
+b-3)config/environments/development.rb
++++ config.active_job.queue_adapter = :inline
+>>>$ bundle install
+
+b-4)***/app/asses/images/
+イメージファイルを保存
 
 
 9)viewの組立、Pagenationの導入
@@ -145,7 +143,11 @@ resources :books, only: [:show, :edit, :index, :update, :new, :create, :destroy]
 >>><%= paginate post_images %>
 >>>"config/initializers/kaminari_config.rb"+++ config.default_per_page = 5
 
+10)GEMIFILE
 
+
+
+===========================トラブルシューティング
 〇Webpackerが起動しない？
 ・appの外部アクセスが要因
 ・Webpackerの再インストール
