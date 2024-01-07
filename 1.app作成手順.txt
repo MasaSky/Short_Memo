@@ -60,7 +60,7 @@ cf. rails g migration AddNameToLists name:string >>>rails db:migrate
 
 <名称変更>
 >>>rails g migration rename_[変更前のカラム名]_column_to_[モデル名(複数形)]
-cf. rails g migration rename_name_column_to_lists
+cf. rails g migration RenameNameColumnToLists
 +++ 
   def change
     rename_column :テーブル名, :変更前のカラム名, :変更後のカラム名
@@ -68,12 +68,13 @@ cf. rails g migration rename_name_column_to_lists
 >>>rails db:migrate
 
 <削除>
->>>rails g migration Removeカラム名Fromテーブル名 カラム名:型名
-cf. rails g migration RemoveNameFromLists name:string >>>rails db:migrate
+>>>rails g migration Removeカラム名Fromテーブル名 カラム名※型名は指定しなくても可
+cf. rails g migration RemoveNameFromLists name >>>rails db:migrate
 
 >>> schema.rbで確認
 cf. create_table "lists", force: :cascade do |t| 内に、追加の場合は「 t.string "name"」が追加され、名称変更の場合は「"author_name"」（例）に変更、削除の場合は削除される
 
+<その他>
 <<<rails db:rollback
 一番最後にmigrateしたマイグレーションファイルをupからdownの状態にします。
 >>>rails db:migrate:status
@@ -81,6 +82,17 @@ cf. create_table "lists", force: :cascade do |t| 内に、追加の場合は「 
 
 <<<rm db/migrate/yyyymmddhhmmss_****.rb
 マイグレーションファイルを削除
+
+rails db:reset:
+データベースを完全にドロップし（削除し）、その後で最初から再作成します。これはdb:dropとdb:setupを連続で行うことに相当します。
+つまり、すべてのデータが消去され、データベースが新しい状態にリセットされ、初期データ（seeds.rbに定義されたもの）がロードされます。
+このコマンドは特に開発初期段階や、データベース構造に重大な変更があった場合に役立ちます。
+
+rails db:migrate:reset:
+データベースのマイグレーションをリセットします。具体的には、すべてのマイグレーションをロールバック（取り消し）し、その後すべてのマイグレーションを最初から適用し直します。
+つまり、db:migrate:down（すべてのマイグレーションをバージョン0にロールバック）とdb:migrate（すべてのマイグレーションを最新のものに適用）を行います。
+このコマンドは、マイグレーションファイルを修正した後や、マイグレーションの順序を確認する必要がある場合に便利です。
+
 
 4)controllerの設定
 >>>rails g controller *** top index show edit ... etc
@@ -202,17 +214,3 @@ y-2)bundle exec rails webpacker:install:all
     <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
-
-〇Rails dbのリセット(refer to ChatGPT's answer)
-
-rails db:reset:
-データベースを完全にドロップし（削除し）、その後で最初から再作成します。これはdb:dropとdb:setupを連続で行うことに相当します。
-つまり、すべてのデータが消去され、データベースが新しい状態にリセットされ、初期データ（seeds.rbに定義されたもの）がロードされます。
-このコマンドは特に開発初期段階や、データベース構造に重大な変更があった場合に役立ちます。
-
-rails db:migrate:reset:
-データベースのマイグレーションをリセットします。具体的には、すべてのマイグレーションをロールバック（取り消し）し、その後すべてのマイグレーションを最初から適用し直します。
-つまり、db:migrate:down（すべてのマイグレーションをバージョン0にロールバック）とdb:migrate（すべてのマイグレーションを最新のものに適用）を行います。
-このコマンドは、マイグレーションファイルを修正した後や、マイグレーションの順序を確認する必要がある場合に便利です。
-
-rails db:resetはデータベース自体を削除して再作成するため、全てのデータが失われます。一方でrails db:migrate:resetはマイグレーションの状態をリセットするもので、データベース構造のみが影響を受けます。
