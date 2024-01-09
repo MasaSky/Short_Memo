@@ -1,9 +1,9 @@
 1)appの作成
 2)appをアクセス可能にする
 3)modelの確立
-4)controllerの設定
-5)routeの設定
-6)deviseの導入
+4)deviseの導入
+5)controllerの設定
+6)routeの設定
 7)bootstrapの導入
 8)Active Strageの導入
 9)viewの組立、Pagenationの導入
@@ -93,22 +93,196 @@ rails db:migrate:reset:
 つまり、db:migrate:down（すべてのマイグレーションをバージョン0にロールバック）とdb:migrate（すべてのマイグレーションを最新のものに適用）を行います。
 このコマンドは、マイグレーションファイルを修正した後や、マイグレーションの順序を確認する必要がある場合に便利です。
 
+4)deviseの導入
+a-1)<Gemifile>devise
++++ gem 'devise'
+>>>*** $ bundle install
+>>>*** $ rails g devise:install
 
-4)controllerの設定
+<汎用設定>
+a-2)User
+>>>*** $ rails g devise User
+
+a-3) db/migrate/（年月日時分秒）_devise_create_users.rb
++++ t.string :name
+>>> rails db:migrate
+
+5)controllerの設定
+<汎用設定>
 >>>rails g controller *** top index show edit ... etc
-
 new, index, create, show, edit, update, destroy
 
 <controllerの削除>
 >>> rails destroy controller ***
 // controllers/concerns/***_controller.rb
 
+<管理者としてのユーザーを作成し、管理者としてログイン、ログアウトできる仕様>
+>>>rails g devise Admin    #---Adminモデルを作成
+>>>rails g devise:controllers admin
+
++++config/routes.rb    #---ルーティング編集
+  devise_for :admins =>
+  devise_for :admin, skip: [:registrations, :password], controllers: {
+    sessions: 'admin/sessions'
+  }
+
+>>>rails g devise:views admins    #---viewを作成
+<<<フォルダ名変更 admins => admin
++++app/views/admin/sessions/new.html.erb
+<%= render "admins/shared/links" %> => <%= render "admin/shared/links" %>
++++app/views/admin/sessions/new.html.erb
+<%= form_with model: @admin, url: session_path(resource_name), local: true do |f| %>
+#---form_for => form_with
+
+>>>管理者側にログイン(サインイン)機能のみを実装する場合は、それ以外の記述は削除
+----app/views/admin/shared/_links.html.erb
+<%- if controller_name != 'sessions' %>
+  <%= link_to "Log in", new_session_path(resource_name) %>
+<% end %>
+#---以下削除
+
+>>>rails db:migrate
+>>>Admin.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password')
+
++++admin/sessions_controller.rb
+  protected
+
+  def after_sign_in_path_for(resource)
+    admin_dashboards_path  #----ログイン後にリダイレクトするパス
+  end
+
+   def after_sign_out_path_for(resource_or_scope)
+    new_admin_session_path  #----ログアウト後にリダイレクトするパス
+  end
+
+<管理者用のダッシュボード機能の作成>
+>>>rails g controller admin/dashboards
++++dashboards_controller.rb
+    before_action :authenticate_admin!
+    def index
+        @users = User.all
+    end
+#----dashboards_controller.rbにユーザーの一覧表示の機能を作成
+
++++config/routes.rb    #管理者ダッシュボードへのルーティングを追加
+  devise_for :admin, skip: [:registrations, :password], controllers: {
+    sessions: 'admin/sessions'
+  }
+ 
+  namespace :admin do
+    get 'dashboards', to: 'dashboards#index'
+  end
+
+>>>touch app/views/admin/dashboards/index.html.erb
+<h1>全ユーザー一覧</h1>
+<ul>
+  <% @users.each do |user| %>
+    <li>
+      <%= user.name %> - <%= user.email %>
+    </li>
+  <% end %>
+</ul>
+
++++app/views/layouts/admin.html.erb
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin - Meshiterro</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+</head>
+<body>
+  <% if admin_signed_in? %>
+    <div class="text-right">
+      <%= link_to 'ログアウト', destroy_admin_session_path, method: :delete %>
+    </div>
+  <% end %>
+  <%= yield %>
+</body>
+</html>
+
++++dashboards_controller.rb
+    layout 'admin' #----追加
+    before_action :authenticate_admin!
+    def index
+        @users = User.all
+    end
++++admin/sessions_controller.rb
+class Admin::SessionsController < Devise::SessionsController
+  layout 'admin' #----追加
+
+
+<publicフォルダを作成し、複数のファイルを作成>#会員用
+>>> mkdir app/controllers/public
+>>>mv app/controllers/{favorites,homes,post_comments,post_images,users}_controller.rb app/controllers/public/
+
++++config/routes.rb  #---ルーティング編集
+  scope module: :public do
+    devise_for :users
+    root to: 'homes#top'
+    get 'homes/about', to: 'homes#about', as: :about
+    resources :post_images, only: [:new, :create, :index, :show, :destroy] do
+      resource :favorites, only: [:create, :destroy]
+      resources :post_comments, only: [:create, :destroy]
+    end
+    resources :users, only: [:show, :edit, :update]
+  end
+
++++class Public::各Controller < ApplicationController
+cf. class Public::UsersController < ApplicationController
+
+<<<app/viewsにpublicフォルダを作成し、app/views/deviseの中身をapp/views/publicの内に移動
+<<<また、app/viewsの配下のadmin、layouts、kaminariのフォルダ以外もapp/views/publicの内に移動
+#---viewsの再利用
+
+<ユーザー削除機能の追加>
+>>>rails g controller admin/users
++++admin/users_controller.rb
+    before_action :authenticate_admin!
+    def destroy
+        @user = User.find(params[:id])
+        @user.destroy
+        redirect_to admin_dashboards_path, notice: 'ユーザーを削除しました。'
+    end
++++config/routes.rb
+namespace :admin do
+  get 'dashboards', to: 'dashboards#index'
+  resources :users, only: [:destroy] #----追加
+end
++++app/views/admin/dashboards/index.html.erb
+<h1>全ユーザー一覧</h1>
+<ul>
+  <% @users.each do |user| %>
+    <li>
+      <%= user.name %> - <%= user.email %>
+      <!-- リンクを追加 -->
+      <%= link_to '削除', admin_user_path(user), method: :delete, data: { confirm: '本当に削除しますか？' } %> 
+    </li>
+  <% end %>
+</ul>
+
+<権限の設定>
++++application_controller.rb
+  before_action :authenticate_user!, except: [:top], unless: :admin_controller? #----追加
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
+  private
+ 
+  def admin_controller?
+    self.class.module_parent_name == 'Admin'
+  end
+
+
+
+>>>
 <namespace の使い方>
 username:~/environment/naganocake $ rails g controller admin/items
 #---controllerやviewなどのコードのファイルを作成する時に、adminというフォルダ内に自動的に保存するコマンドになっています。
 >>>username:~/environment/*** $ rails g controller [namespaceのグループ名]/[コントローラー名]
 
-5) routeの設定
+6) routeの設定
 Routing
 +++ resources :***
 >>>$ rails routes
@@ -134,19 +308,6 @@ resources :books, only: [:show, :edit, :index, :update, :new, :create, :destroy]
     resources :post_comments, only: [:create, :destroy]
   end
   resources :users, only: [:show, :edit, :update]
-
-6)deviseの導入
-a-1)<Gemifile>devise
-+++ gem 'devise'
->>>*** $ bundle install
->>>*** $ rails g devise:install
-
-a-2)User
->>>*** $ rails g devise User
-
-a-3) db/migrate/（年月日時分秒）_devise_create_users.rb
-+++ t.string :name
->>> rails db:migrate
 
 
 7)Bootstrapの導入
