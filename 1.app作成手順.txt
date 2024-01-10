@@ -39,6 +39,18 @@ app/models/***.rb
 モデルのファイル名	単数形、先頭は英小文字	list.rb
 テーブル名	複数形、先頭は英小文字	list
 <<<<
+string : 文字列/255文字
+text : 長い文字列/4294967296文字
+integer : 整数/4 bites
+float : 浮動小数/小数点以下が浮動
+decimal : 精度の高い小数/有効数字
+datetime : 日時/date+time
+timestamp : タイムスタンプ
+time : 時間/時刻
+date : 日付/年月日
+binary : バイナリデータ
+boolean : 真偽性/true/false
+<<<<
 
 ad/migrate/YYYYNNDDHHMM_create_***.rb (Table Info)
 +++
