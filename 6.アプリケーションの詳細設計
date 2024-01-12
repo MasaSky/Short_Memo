@@ -27,9 +27,7 @@ Rails.application.routes.draw do
       passwords: 'public/customers/passwords',
       registrations: 'public/customers/registrations'
     }
-  end
 
-  scope module: :public do
     resource  :customers, only: [:show, :edit, :update] do
       collection do
         get 'delete'
@@ -51,15 +49,15 @@ Rails.application.routes.draw do
     end
   end
 
-  scope module: :admin do
+
+
+  namespace :admin do
     devise_for :admin, controllers: {
       sessions: 'admin/admin/sessions',
       passwords: 'admin/admin/passwords',
       registrations: 'admin/admin/registrations'
     }
-  end
-
-  namespace :admin do
+    
     resources :orders, only: [:show] do
         collection do
           patch 'status' do
