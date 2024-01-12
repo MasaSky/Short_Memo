@@ -16,31 +16,69 @@
 
 +++/config/routes.rb
 Rails.application.routes.draw do
-  # トップページ
-  get '/', to: 'homes#top', as: 'top', description: 'サイトのトップページ'
+ 
+  root to: 'public/homes#top'
+  get '/about' => 'public/homes#about'
+  get '/admin' => 'admin/homes#top'
 
-  # アバウトページ
-  get '/about', to: 'homes#about', as: 'about', description: 'サイトの概要ページ'
-
-  # 商品一覧
-  resources :items, only: [:index, :show]
-
-  # 顧客
-  resources :customers, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
-    resources :deliveries, only: [:index, :new, :create, :edit, :update, :destroy]
-    resources :cart_items, only: [:index, :update, :destroy, :create]
-    resources :orders, only: [:index, :show, :new, :create, :confirm, :complete]
+  scope module: :public do
+    devise_for :customers, controllers: {
+      sessions: 'public/customers/sessions',
+      passwords: 'public/customers/passwords',
+      registrations: 'public/customers/registrations'
+    }
   end
 
-  # 管理者
-  namespace :admin do
-    resources :items, only: [:index, :new, :create, :show, :edit, :update, :status]
-    resources :customers, only: [:index, :show, :edit, :update]
-    resources :genres, only: [:index, :new, :create, :edit, :update]
-    resources :orders, only: [:index, :show, :new, :create, :confirm, :complete] do
-      resources :order_details, only: [:index, :show]
+  scope module: :public do
+    resource  :customers, only: [:show, :edit, :update] do
+      collection do
+        get 'delete'
+        patch 'deactive'
+      end
+    end
+    resources :items, only: [:index, :show]
+    resources :deliveries, only: [:index, :create, :edit, :update, :destroy]
+    resources :cart_items, only: [:index, :create, :destroy, :update] do
+      collection do
+        delete 'cart_items' => 'cart_items#destroy_all'
+      end
+    end
+    resources :orders, only: [:new, :create, :index, :show] do
+      collection do
+        post 'confirm'
+        get 'complete'
+      end
     end
   end
+
+  scope module: :admin do
+    devise_for :admin, controllers: {
+      sessions: 'admin/admin/sessions',
+      passwords: 'admin/admin/passwords',
+      registrations: 'admin/admin/registrations'
+    }
+  end
+
+  namespace :admin do
+    resources :orders, only: [:show] do
+        collection do
+          patch 'status' do
+        end
+    end
+    resources :items, only: [:index, :new, :create, :show, :edit, :update] do
+      collection do
+        patch 'status'
+      end
+    end
+    resources :customers, only: [:index, :show, :edit, :update]
+    resources :genres, only: [:index, :create, :edit, :update]
+    resources :order_details, only: [:show] do
+      collection do
+        patch 'status'
+      end
+    end
+  end
+
 end
 
 <<<基本
