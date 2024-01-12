@@ -21,6 +21,7 @@ $ rails d devise Admin #　Adminのmigrationファイルを削除
 $ rails g model Admin -f # 名前の重複を無視して強制的にAdminモデルを作成
 $ rails g devise Admin # 強制的に作成したAdminモデルにdevise用の設定を追加
 =====
+----カラムは既に記述があるので特段のことがない限り変更不要
 >>>rails db:migrate
 
 <モデル/テーブル作成> ($ rails g model Model名)
@@ -69,6 +70,10 @@ $ rails g devise Admin # 強制的に作成したAdminモデルにdevise用の�
       t.string :address, null: false
 >>>rails db:migrate
 
+>>>rails g model Genre
+++++xxxxx_create_genres.rb
+      t.string :name, null: false
+>>>rails db:migrate
 
 
 
