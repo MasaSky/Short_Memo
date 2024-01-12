@@ -32,3 +32,43 @@ $ rails g devise Admin # 強制的に作成したAdminモデルにdevise用の�
       t.integer :unit_price, null: false
       t.boolean :is_active, null: false, default: true
 >>>rails db:migrate
+
+>>>rails g model CartItem
+++++xxxxx_create_cart_items.rb
+      t.integer :item_id, null: false
+      t.integer :customer_id, null: false
+      t.integer :quantity, null: false
+>>>rails db:migrate
+
+>>>rails g model Order
+++++xxxxx_create_orders.rb
+      t.integer :customer_id, null: false
+      t.string :attention, null: false
+      t.string :postal_code, null: false
+      t.string :address, null: false
+      t.integer :freight, null: false
+      t.integer :grand_total, null: false
+      t.integer :payment_method, null: false
+      t.integer :order_status, null: false
+>>>rails db:migrate
+
+>>>rails g model OrderItem
+++++xxxxx_create_order_items.rb
+      t.integer :item_id, null: false
+      t.integer :order_id, null: false
+      t.integer :price, null: false
+      t.integer :quantity, null: false
+      t.integer :product_status, null: false
+>>>rails db:migrate
+
+>>>rails g model Delivery
+++++xxxxx_create_deliveries.rb
+      t.integer :customer_id, null: false
+      t.string :attention, null: false
+      t.string :postal_code, null: false
+      t.string :address, null: false
+>>>rails db:migrate
+
+
+
+
