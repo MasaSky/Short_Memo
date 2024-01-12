@@ -28,12 +28,6 @@ rails g model ***
 ---rails destroy model ***
 >>>rails db:rollback
 
-〇バリデーション設定
-app/models/***.rb
-+++
-  validates :title, presence: true
-  validates :body, presence: true
-
 <<<<
 モデル名	単数形、先頭は英大文字	List
 モデルのファイル名	単数形、先頭は英小文字	list.rb
@@ -77,8 +71,7 @@ DEFAULT	----データの初期値を設定する機能
 ---名前を見ただけで中に入るデータを正確に読み取れる
 ---deviseはパスワードを文字列のままではなく、ハッシュ化という元の値がわからないように処理を施した形で保存
 
-ad/migrate/YYYYNNDDHHMM_create_***.rb (Table Info)
-+++
++++ad/migrate/YYYYNNDDHHMM_create_***.rb (Table Info)
       t.string :title
       t.string :body
 
@@ -129,6 +122,28 @@ rails db:migrate:reset:
 データベースのマイグレーションをリセットします。具体的には、すべてのマイグレーションをロールバック（取り消し）し、その後すべてのマイグレーションを最初から適用し直します。
 つまり、db:migrate:down（すべてのマイグレーションをバージョン0にロールバック）とdb:migrate（すべてのマイグレーションを最新のものに適用）を行います。
 このコマンドは、マイグレーションファイルを修正した後や、マイグレーションの順序を確認する必要がある場合に便利です。
+
+〇バリデーション設定
++++app/models/***.rb
+  validates :title, presence: true
+  validates :body, presence: true
+
+cf:class Address < ApplicationRecord
+  belongs_to :customer
+
+  validates :attention, presence: true, length: { minimum: 2, maximum: 20 }
+  validates :postal_code, presence: true, length: { is: 7 }, numericality: { only_integer: true }
+  validates :address, presence: true, length: { minimum: 7, maximum: 150 }
+
+cf:class Order < ApplicationRecord
+  belongs_to :customer
+  has_many :order_details, dependent: :destroy
+
+  enum payment_method: {"クレジットカード": 0, "銀行振込": 1}
+  enum order_status: {"入金待ち": 0, "入金確認": 1, "製作中": 2, "発送準備中": 3, "発送済み": 4}
+  validates :name, presence: true, length: { minimum: 2, maximum: 20 }
+  validates :postal_code, presence: true, length: { is: 7 }, numericality: { only_integer: true }
+  validates :address, presence: true, length: { minimum: 7, maximum: 150 }
 
 4)deviseの導入
 a-1)<Gemifile>devise
