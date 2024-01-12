@@ -43,6 +43,87 @@ Rails.application.routes.draw do
   end
 end
 
+<<<基本
+Rails.application.routes.draw do
+  # トップページ
+  get '/', to: 'homes#top'
+
+  # アバウトページ
+  get '/about', to: 'homes#about'
+
+  # 商品一覧
+  resources :items, only: [:index, :show]
+
+  # 顧客の会員登録
+  get '/customers/sign_up', to: 'registrations#new'
+  post '/customers', to: 'registrations#create'
+
+  # 顧客ログイン
+  get '/customers/sign_in', to: 'sessions#new'
+  post '/customers/sign_in', to: 'sessions#create'
+  delete '/customers/sign_out', to: 'sessions#destroy'
+
+  # 顧客マイページ
+  get '/customers/:id', to: 'customers#show'
+
+  # 顧客の登録情報編集
+  get '/customers/:id/edit', to: 'customers#edit'
+  patch '/customers/:id', to: 'customers#update'
+
+  # 顧客の退会確認
+  get '/customers/delete', to: 'customers#delete'
+  patch '/customers/deactive', to: 'customers#deactive'
+
+  # 配送先一覧
+  resources :deliveries, only: [:index, :create, :edit, :update, :destroy]
+
+  # カート内商品一覧
+  resources :cart_items, only: [:index, :update, :destroy, :create]
+
+  # 注文情報入力画面
+  get '/orders/new', to: 'orders#new'
+
+  # 注文情報確認画面
+  get '/orders/confirm', to: 'orders#confirm'
+
+  # 注文完了画面
+  get '/orders/complete', to: 'orders#complete'
+
+  # 注文確定処理
+  post '/orders', to: 'orders#create'
+
+  # 注文履歴
+  resources :orders, only: [:index, :show]
+
+  # 注文詳細画面
+  get '/orders/:id', to: 'orders#show'
+
+  # 注文ステータス
+  patch '/orders/:id', to: 'orders#status'
+
+  # 管理者ログイン
+  get '/admin/sign_in', to: 'admin/sessions#new'
+  post '/admin/sign_in', to: 'admin/sessions#create'
+  delete '/admin/sign_out', to: 'admin/sessions#destroy'
+
+  # 管理者トップページ
+  get '/admin', to: 'admin/homes#top'
+
+  # 商品一覧
+  resources :admin/items, only: [:index, :new, :create, :show, :edit, :update, :status]
+
+  # 顧客一覧
+  resources :admin/customers, only: [:index, :show, :edit, :update]
+
+  # ジャンル一覧
+  resources :admin/genres, only: [:index, :new, :create, :edit, :update]
+
+  # 注文詳細画面
+  get '/admin/order_details/:id', to: 'admin/order_details#show'
+
+  # 製作ステータス
+  patch '/admin/order_details/:id', to: 'admin/order_details#status'
+end
 
 
 =================================================================
