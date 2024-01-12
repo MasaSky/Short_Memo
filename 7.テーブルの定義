@@ -1,7 +1,7 @@
 1) Gemのインストール
 
 2) モデルの作成
-<deviseの作成>
+<deviseの作成> ($ rails g devise Model名)
 >>>rails g devise Customer
 ++++xxxxx_devise_create_customers.rb
       t.string :last_name, null: false
@@ -16,3 +16,19 @@
 >>>rails db:migrate
 
 >>>rails g devise Admin
+=====コントローラ等ですでに「admin」フォルダが存在し、名前が被っているため作成できない場合
+$ rails d devise Admin #　Adminのmigrationファイルを削除
+$ rails g model Admin -f # 名前の重複を無視して強制的にAdminモデルを作成
+$ rails g devise Admin # 強制的に作成したAdminモデルにdevise用の設定を追加
+=====
+>>>rails db:migrate
+
+<モデル/テーブル作成> ($ rails g model Model名)
+>>>rails g model Item
+++++xxxxx_create_items.rb
+      t.integer :genre_id, null: false
+      t.string :name, null: false
+      t.text :introduction, null: false
+      t.integer :unit_price, null: false
+      t.boolean :is_active, null: false, default: true
+>>>rails db:migrate
