@@ -1,4 +1,8 @@
 1) Gemのインストール
++++Gemifile
+	gem 'devise'
+	gem "enum_help"
+>>>bundle install
 
 2) モデルの作成
 <deviseの作成> ($ rails g devise Model名)
