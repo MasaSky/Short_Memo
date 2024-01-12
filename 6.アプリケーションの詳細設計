@@ -1,3 +1,4 @@
+<HTTP method>
 〇POSTの使用事例
 ユーザーの登録
 商品の注文
@@ -12,56 +13,6 @@
 ユーザーのパスワードの変更
 商品の在庫の更新
 ブログ記事の公開
-
-1) ユーザーの退会処理 (PATCH)
-class UsersController < ApplicationController
-  def destroy
-    @user = current_user
-    @user.update(is_deleted: true)
-    redirect_to users_path    #--- 退会確認画面へリダイレクト
-  end
-end
-
-2) 販売ステータスの更新 (PATCH)
-class ProductsController < ApplicationController
-  def update_status
-    @product = Product.find(params[:id])
-    @product.update(sale_status: params[:sale_status])
-    redirect_to product_path(@product)    #--- 販売ステータス更新完了画面へリダイレクト
-  end
-end
-
-3) 注文ステータスの更新(PATCH)
-class OrdersController < ApplicationController
-  def update_status
-    @order = Order.find(params[:id])
-    @order.update(status: params[:status])
-    redirect_to order_path(@order)    #--- 注文ステータス更新完了画面へリダイレクト
-  end
-end
-
-4) ジャンル名称の変更(PUT)
-class GenresController < ApplicationController
-  def update
-    genre = Genre.find(params[:id])    #--- ジャンルを取得
-    genre.update(name: params[:name])    #--- ジャンルの名称を更新
-    genre.products.each do |product|     #--- ジャンルに紐付く商品の名称を更新
-      product.update(name: product.name.gsub(genre.name, params[:name]))
-    end
-    redirect_to genres_path    #--- ジャンル更新完了画面へリダイレクト
-  end
-  product.update(name: product.name.gsub(genre.name, params[:name]))
-end
-
-5) 注文のキャンセル時に、注文のキャンセル理由を記録する場合(PUT)
-class OrdersController < ApplicationController
-  def cancel
-    order = Order.find(params[:id])        #--- 注文を取得
-    order.update(status: "canceled", cancel_reason: params[:cancel_reason])        #--- 注文ステータスを「キャンセル済み」に更新
-    redirect_to order_path(order)        #--- 注文キャンセル完了画面へリダイレクト
-  end
-end
-
 
 +++/config/routes.rb
 Rails.application.routes.draw do
@@ -180,3 +131,56 @@ Rails.application.routes.draw do
     resources :genres, only: [:index, :new, :create, :edit, :update]
   end
 end
+
+=================================================================
+1) ユーザーの退会処理 (PATCH)
+class UsersController < ApplicationController
+  def destroy
+    @user = current_user
+    @user.update(is_deleted: true)
+    redirect_to users_path    #--- 退会確認画面へリダイレクト
+  end
+end
+
+2) 販売ステータスの更新 (PATCH)
+class ProductsController < ApplicationController
+  def update_status
+    @product = Product.find(params[:id])
+    @product.update(sale_status: params[:sale_status])
+    redirect_to product_path(@product)    #--- 販売ステータス更新完了画面へリダイレクト
+  end
+end
+
+3) 注文ステータスの更新(PATCH)
+class OrdersController < ApplicationController
+  def update_status
+    @order = Order.find(params[:id])
+    @order.update(status: params[:status])
+    redirect_to order_path(@order)    #--- 注文ステータス更新完了画面へリダイレクト
+  end
+end
+
+4) ジャンル名称の変更(PUT)
+class GenresController < ApplicationController
+  def update
+    genre = Genre.find(params[:id])    #--- ジャンルを取得
+    genre.update(name: params[:name])    #--- ジャンルの名称を更新
+    genre.products.each do |product|     #--- ジャンルに紐付く商品の名称を更新
+      product.update(name: product.name.gsub(genre.name, params[:name]))
+    end
+    redirect_to genres_path    #--- ジャンル更新完了画面へリダイレクト
+  end
+  product.update(name: product.name.gsub(genre.name, params[:name]))
+end
+
+5) 注文のキャンセル時に、注文のキャンセル理由を記録する場合(PUT)
+class OrdersController < ApplicationController
+  def cancel
+    order = Order.find(params[:id])        #--- 注文を取得
+    order.update(status: "canceled", cancel_reason: params[:cancel_reason])        #--- 注文ステータスを「キャンセル済み」に更新
+    redirect_to order_path(order)        #--- 注文キャンセル完了画面へリダイレクト
+  end
+end
+
+
+
