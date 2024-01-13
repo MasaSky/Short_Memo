@@ -95,4 +95,78 @@ class CartItemsController < ApplicationController
 end
 
 3) ===========================================================================
+class OrdersController < ApplicationController
+	before_action :authenticate_customer!
+  def new
+    @order = Order.new
+    @deliveries = current_customer.deliveries
+  end
+
+  def confirm
+    @cart_items = current_customer.cart_items
+    @order = Order.new(customer: current_customer, payment_method: params[:order][:payment_method])
+    @order.total_price = billing(@order)
+
+    if params[:order][:address_option] == "address"
+      @order.postal_code = current_customer.postal_code
+      @order.address     = current_customer.address
+      @order.name        = current_customer.last_name + current_customer.first_name
+
+    elsif params[:order][:address_option] == "shipping_address"
+      ship = Address.find(params[:order][:address_id])
+      @order.postal_code = ship.postal_code
+      @order.address     = ship.address
+      @order.name        = ship.name
+
+    elsif params[:order][:address_option] == "new_address"
+      @order.postal_code = params[:order][:postal_code]
+      @order.address     = params[:order][:address]
+      @order.name        = params[:order][:name]
+      @ship = "1"
+
+      unless @order.valid? == true
+        @addresses = Address.where(customer: current_customer)
+        render :new
+      end
+    end
+  end
+
+  def create
+    @order = Order.new(order_params)
+    @order.save
+    current_customer.cart_items.each do |cart_item|
+	@order_item = OrderItem.new
+	@order_item.order_id = @order.id
+	@order_item.item_id = cart_item.item_id
+	@order_item.tax_price = cart_item.tax_price
+	@order_item.quantity = cart_item.quantity
+	@order_item.save!
+    end
+    current_customer.cart_items.destroy_all
+    redirect_to orders_complete_path
+  end
+
+  def complete
+    @order = Order.find(params[:id])
+    @order.complete!
+    redirect_to orders_path, notice: '注文を完了しました。'
+  end
+
+  def index
+    @orders = current_customer.orders
+  end
+
+  def show
+    @order = Order.find(params[:id])
+    @order_items = @order.order_items
+  end
+
+  private
+
+  def order_params
+    params.require(:order).permit(:customer_id, :item_id, :quantity, :grand_total, :attention, :postal_code, :address)
+  end
+end
+
+
 
