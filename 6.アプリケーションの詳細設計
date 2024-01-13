@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   get '/about' => 'public/homes#about'
   get '/admin' => 'admin/homes#top'
   get '/customers/info' => 'public/customers#show'
+  get '/customers/info/edit' => 'public/customers#edit'
 
   scope module: :public do
     devise_for :customers, controllers: {
