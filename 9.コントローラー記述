@@ -29,8 +29,9 @@ class CustomersController < ApplicationController
 
   def deactive    #--- PATCH /customers/:id/deactive
     @customer = current_customer
-    if @customer.update(active: false)
-      redirect_to customers_path, notice: 'Customer was successfully deactivated.'
+    if @customer.update(is_active: false)
+      reset_session    #--- セッションをリセット
+      redirect_to root_path, notice: 'Your account has been deactivated.'
     else
       render :edit
     end
