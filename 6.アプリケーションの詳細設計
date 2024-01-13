@@ -57,11 +57,11 @@ Rails.application.routes.draw do
       registrations: 'admin/registrations'
     }
     
-    resource :orders, only: [:update] 
+    resources :orders, only: [:update] 
     resources :items, only: [:index, :new, :create, :show, :edit, :update]
     resources :customers, only: [:index, :show, :edit, :update]
     resources :genres, only: [:index, :create, :edit, :update]
-    resource :order_items, only: [:update] 
+    resources :order_items, only: [:update] 
   end
 
 end
