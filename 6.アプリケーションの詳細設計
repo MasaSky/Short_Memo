@@ -30,8 +30,9 @@ Rails.application.routes.draw do
       registrations: 'public/customers/registrations'
     }
 
-    resource  :customers, only: [:show, :edit, :update] do
-      collection do
+    resource :customers, only: [:show, :edit, :update] do
+      member do
+        get 'info'
         get 'delete'
         patch 'deactive'
       end
