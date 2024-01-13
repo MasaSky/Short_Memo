@@ -22,10 +22,7 @@ Rails.application.routes.draw do
   get '/admin' => 'admin/homes#top'
 
   scope module: :public do
-    devise_for :customers, controllers: {
-      sessions: 'public/customers/sessions',
-      passwords: 'public/customers/passwords',
-      registrations: 'public/customers/registrations'
+    devise_for :customers, controllers: {sessions: 'public/customers/sessions', passwords: 'public/customers/passwords', registrations: 'public/customers/registrations'
     }
 
     resources :items, only: [:index, :show]
@@ -51,10 +48,7 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
-    devise_for :admin, controllers: {
-      sessions: 'admin/sessions',
-      passwords: 'admin/passwords',
-      registrations: 'admin/registrations'
+    devise_for :admin, controllers: {sessions: 'admin/sessions', passwords: 'admin/passwords', registrations: 'admin/registrations'
     }
     
     resources :items, only: [:index, :new, :create, :show, :edit, :update]
