@@ -28,6 +28,7 @@ Rails.application.routes.draw do
       registrations: 'public/customers/registrations'
     }
 
+    resources :items, only: [:index, :show]
     resources :customers, only: [:show, :edit, :update] do
       member do
         get 'info'
@@ -35,7 +36,6 @@ Rails.application.routes.draw do
         patch 'deactive'
       end
     end
-    resources :items, only: [:index, :show]
     resources :deliveries, only: [:index, :create, :edit, :update, :destroy]
     resources :cart_items, only: [:index, :create, :update, :destroy] do
       collection do
@@ -57,10 +57,10 @@ Rails.application.routes.draw do
       registrations: 'admin/registrations'
     }
     
-    resources :orders, only: [:update] 
     resources :items, only: [:index, :new, :create, :show, :edit, :update]
     resources :customers, only: [:index, :show, :edit, :update]
     resources :genres, only: [:index, :create, :edit, :update]
+    resources :orders, only: [:show, :update] 
     resources :order_items, only: [:update] 
   end
 
