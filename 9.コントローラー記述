@@ -55,12 +55,11 @@ end
 class Public::RegistrationsController < Devise::RegistrationsController
   before_action :configure_sign_up_params, only: [:create]
 
+  private
 
   def configure_sign_up_params
     devise_parameter_sanitizer.permit(:sign_up, keys:[:name])
   end
-
-
 
 end
 
@@ -68,7 +67,6 @@ end
 class Public::SessionsController < Devise::SessionsController
   before_action :customer_state, only: [:create]
 
- 
   def after_sign_in_path_for(resource)
     root_path
   end
@@ -88,9 +86,45 @@ class Public::SessionsController < Devise::SessionsController
   　end
 　end
 
- 
 end
 
+4) ===========================================================================
+class Admin::GenresController < ApplicationController
+
+  before_action :authenticate_admin!
+
+  def index
+    @genre = Genre.new
+    @genres = Genre.all
+  end
+
+  def create
+    @genre = Genre.new(genre_params)
+    unless @genre.save
+      render :index
+    end
+  end
+
+  def edit
+    @genre = Genre.find(params[:id])
+  end
+
+  def update
+    @genre = Genre.find(params[:id])
+    if @genre.update(genre_params)
+      redirect_to admin_genres_path
+    else
+      render :edit
+    end
+  end
+
+  private
+
+  def genre_params
+    params.require(:genre).permit(:name)
+  end
+
+end
 
 1) ===========================================================================
 class CustomersController < ApplicationController
