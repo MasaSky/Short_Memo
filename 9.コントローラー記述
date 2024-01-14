@@ -1,3 +1,25 @@
+controllers/
+├── admin/
+|   ├── sessions_controller.rb
+|   ├── homes_controller.rb
+|   ├── items_controller.rb
+|   ├── customers_controller.rb
+|   ├── genres_controller.rb
+|   ├── orders_controller.rb
+│   └── order_items_controller.rb
+├── concerns/
+│   └── ...
+├── application_controller.rb
+└── public/
+    ├── homes_controller.rb
+    ├── items_controller.rb
+    ├── registrations_controller.rb
+    ├── customers_controller.rb
+    ├── deliveries_controller.rb
+    ├── cart_items_controller.rb
+    └── orders_controller.rb
+
+
 1) ===========================================================================
 class CustomersController < ApplicationController
   before_action :authenticate_customer!
