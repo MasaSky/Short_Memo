@@ -97,28 +97,28 @@ class CustomersController < ApplicationController
   before_action :authenticate_customer!
 
   def show    #--- GET /customers/:id
-    @customer = current_customer
+    customer = current_customer
   end
 
   def edit    #--- GET /customers/:id/edit
-    @customer = current_customer
+    customer = current_customer
   end
 
   def update    #--- PATCH/PUT /customers/:id
-    @customer = current_customer
-    if @customer.update(customer_params)
-      redirect_to @customer, notice: 'Customer was successfully updated.'
+    customer = current_customer
+    if customer.update(customer_params)
+      redirect_to customer, notice: 'Customer was successfully updated.'
     else
       render :show
     end
   end
 
   def info    #--- GET /customers/:id/info
-    @customer = current_customer
+    customer = current_customer
   end
 
   def quit    #--- GET /customers/:id/quit
-    @customer = current_customer
+    customer = current_customer
   end
 
 def deactive	#--- PATCH /customers/:id/deactive
@@ -146,7 +146,7 @@ class CartItemsController < ApplicationController
 	before_action :setup_cart_item!, only: [:update, :create, :destroy, :destroy_all]
 
   def index    #--- GET /cart_items
-    @cart_items = current_customer.cart_items
+    cart_items = current_customer.cart_items
   end
 
   def create    #--- POST /cart_items
