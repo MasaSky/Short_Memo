@@ -89,8 +89,55 @@ class Public::SessionsController < Devise::SessionsController
 end
 
 4) ===========================================================================
-class Admin::GenresController < ApplicationController
+class CustomersController < ApplicationController
+  before_action :authenticate_customer!
 
+  def show    #--- GET /customers/:id
+    customer = current_customer
+  end
+
+  def edit    #--- GET /customers/:id/edit
+    customer = current_customer
+  end
+
+  def update    #--- PATCH/PUT /customers/:id
+    customer = current_customer
+    if customer.update(customer_params)
+      redirect_to customer, notice: '会員情報を更新しました'
+    else
+      render :show
+    end
+  end
+
+  def info    #--- GET /customers/:id/info
+    customer = current_customer
+  end
+
+  def quit    #--- GET /customers/:id/quit
+    customer = current_customer
+  end
+
+def deactive	#--- PATCH /customers/:id/deactive
+  customer = current_customer
+  if confirm('退会しますか？')
+    customer.update(is_active: false)
+    reset_session
+    flash.clear
+    redirect_to root_path, notice: '退会しました'
+  else
+    redirect_back
+  end
+end
+
+  private
+
+  def customer_params
+      params.require(:customer).permit(:last_name, :first_name, :last_name_kana, :first_name_kana, :postal_code, :address, :telphone_number, :email)
+  end
+end
+
+5) ===========================================================================
+class Admin::GenresController < ApplicationController
   before_action :authenticate_admin!
 
   def index
@@ -126,55 +173,66 @@ class Admin::GenresController < ApplicationController
 
 end
 
-1) ===========================================================================
-class CustomersController < ApplicationController
-  before_action :authenticate_customer!
+6) ===========================================================================
+class Admin::ItemsController < ApplicationController
+  before_action :authenticate_admin!
 
-  def show    #--- GET /customers/:id
-    customer = current_customer
+  def index
+    @items = Item.page(params[:page]).per(10)
   end
 
-  def edit    #--- GET /customers/:id/edit
-    customer = current_customer
+  def new
+    @item = Item.new
   end
 
-  def update    #--- PATCH/PUT /customers/:id
-    customer = current_customer
-    if customer.update(customer_params)
-      redirect_to customer, notice: 'Customer was successfully updated.'
+  def create
+    @item = Item.new(item_params)
+    @genres = Genres.all
+    if @item.save
+      flash[:notice] = "商品を登録しました"
+      redirect_to admin_item_path(@item.id)
     else
-      render :show
+      render :new
     end
   end
 
-  def info    #--- GET /customers/:id/info
-    customer = current_customer
+  def show
+    @item = Item.find(params[:id])
   end
 
-  def quit    #--- GET /customers/:id/quit
-    customer = current_customer
+  def edit
+    @item = Item.find(params[:id])
+    @genres = Genre.all
   end
 
-def deactive	#--- PATCH /customers/:id/deactive
-  customer = current_customer
-  if confirm('退会しますか？')
-    customer.update(is_active: false)
-    reset_session
-    flash.clear
-    redirect_to root_path, notice: '退会しました'
-  else
-    redirect_back
+  def update
+    @item = Item.find(params[:id])
+    @genres = Genre.all
+    if @item.update(item_params)
+      flash[:notice] = "商品を編集しました"
+      redirect_to admin_item_path(@item.id)
+    else
+      render :edit
+    end
   end
-end
 
   private
 
-  def customer_params
-      params.require(:customer).permit(:last_name, :first_name, :last_name_kana, :first_name_kana, :postal_code, :address, :telphone_number, :email)
+  def item_params
+    params.require(:item).permit(:genre_id, :name, :introduction, :unit_price, :is_active)
   end
+
 end
 
-2) ===========================================================================
+8) ===========================================================================
+
+
+
+9) ===========================================================================
+
+
+
+10) ===========================================================================
 class CartItemsController < ApplicationController
 	before_action :authenticate_customer!
 	before_action :setup_cart_item!, only: [:update, :create, :destroy, :destroy_all]
@@ -224,7 +282,7 @@ class CartItemsController < ApplicationController
   end
 end
 
-3) ===========================================================================
+11) ===========================================================================
 class OrdersController < ApplicationController
 	before_action :authenticate_customer!
   def new
