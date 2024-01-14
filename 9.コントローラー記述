@@ -1,24 +1,24 @@
 controllers/
 ├── admin/
-|   ├── sessions_controller.rb
-|   ├── homes_controller.rb
-|   ├── items_controller.rb
-|   ├── customers_controller.rb
-|   ├── genres_controller.rb
-|   ├── orders_controller.rb
-│   └── order_items_controller.rb
+|   ├── sessions_controller.rb [new, create, destroy]
+|   ├── homes_controller.rb [top]
+|   ├── items_controller.rb [index, new, create, show, edit, update]
+|   ├── customers_controller.rb [index, show, edit, update]
+|   ├── genres_controller.rb [index, create, edit, update]
+|   ├── orders_controller.rb [show, update]
+│   └── order_items_controller.rb [update]
 ├── concerns/
 │   └── ...
 ├── application_controller.rb
 └── public/
-    ├── homes_controller.rb
-    ├── items_controller.rb
-    ├── registrations_controller.rb
-    ├── sessions_controller.rb
-    ├── customers_controller.rb
-    ├── deliveries_controller.rb
-    ├── cart_items_controller.rb
-    └── orders_controller.rb
+    ├── homes_controller.rb [top, about]
+    ├── items_controller.rb [index, show]
+    ├── registrations_controller.rb [new, create]
+    ├── sessions_controller.rb [new, create, destroy]
+    ├── customers_controller.rb [show, edit, update, quit, deactive]
+    ├── deliveries_controller.rb [index, create, edit, update, destroy]
+    ├── cart_items_controller.rb [index, update, destroy,destroy_all, create]
+    └── orders_controller.rb [new, confirm, complete, create, index, show]
 
 
 1) ===========================================================================
