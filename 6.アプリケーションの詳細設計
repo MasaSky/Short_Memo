@@ -29,7 +29,7 @@ Rails.application.routes.draw do
     resources :customers, only: [:show, :edit, :update] do
       member do
         get 'info'
-        get 'out'
+        get 'quit'
         patch 'deactive'
       end
     end
