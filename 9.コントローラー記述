@@ -14,6 +14,7 @@ controllers/
     ├── homes_controller.rb
     ├── items_controller.rb
     ├── registrations_controller.rb
+    ├── sessions_controller.rb
     ├── customers_controller.rb
     ├── deliveries_controller.rb
     ├── cart_items_controller.rb
