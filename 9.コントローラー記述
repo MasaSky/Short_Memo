@@ -126,8 +126,6 @@ class CustomersController < ApplicationController
     if @customer.update(is_active: false)
       reset_session    #--- セッションをリセット
       redirect_to root_path, notice: 'Your account has been deactivated.'
-    else
-      render :edit
     end
   end
 
