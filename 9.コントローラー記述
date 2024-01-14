@@ -23,7 +23,7 @@ class CustomersController < ApplicationController
     @customer = current_customer
   end
 
-  def delete    #--- GET /customers/:id/delete
+  def quit    #--- GET /customers/:id/quit
     @customer = current_customer
   end
 
