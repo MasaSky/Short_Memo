@@ -78,13 +78,13 @@ class Public::SessionsController < Devise::SessionsController
 　def customer_state
   　if customer = Customer.find_by(email: params[:customer][:email])
     　if customer.valid_password?(params[:customer][:password]) && customer.active_for_authentication? == false
-      　flash[:error] = '退会済みです。'
+      　flash[:error] = '退会済みです'
       　redirect_to new_customer_session_path
     　else
-      　flash[:error] = 'パスワードが間違っているか、または未入力です。'
+      　flash[:error] = 'パスワードが間違っているか、または未入力です'
     　end
   　else
-    　flash[:error] = '必須項目を入力してください。'
+    　flash[:error] = '必須項目を入力してください'
   　end
 　end
 
@@ -121,13 +121,17 @@ class CustomersController < ApplicationController
     @customer = current_customer
   end
 
-  def deactive    #--- PATCH /customers/:id/deactive
-    @customer = current_customer
-    if @customer.update(is_active: false)
-      reset_session    #--- セッションをリセット
-      redirect_to root_path, notice: 'Your account has been deactivated.'
-    end
+def deactive	#--- PATCH /customers/:id/deactive
+  customer = current_customer
+  if confirm('退会しますか？')
+    customer.update(is_active: false)
+    reset_session
+    flash.clear
+    redirect_to root_path, notice: '退会しました'
+  else
+    redirect_back
   end
+end
 
   private
 
@@ -241,7 +245,7 @@ class OrdersController < ApplicationController
   def complete
     @order = Order.find(params[:id])
     @order.complete!
-    redirect_to orders_path, notice: '注文を完了しました。'
+    redirect_to orders_path, notice: '注文を完了しました'
   end
 
   def index
