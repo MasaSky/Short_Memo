@@ -48,7 +48,6 @@ class Admin::HomesController < ApplicationController
   before_action :authenticate_admin!
 
 
-
 end
 
 2) ===========================================================================
@@ -225,7 +224,7 @@ class Admin::ItemsController < ApplicationController
 
 end
 
-8) ===========================================================================
+7) ===========================================================================
 class Admin::CustomersController < ApplicationController
   before_action :authenticate_admin!
 
@@ -260,8 +259,7 @@ class Admin::CustomersController < ApplicationController
 
 end
 
-
-9) ===========================================================================
+8) ===========================================================================
 class Public::DeliveriesController < ApplicationController
   before_action :authenticate_customer!
 
@@ -309,8 +307,7 @@ class Public::DeliveriesController < ApplicationController
 
 end
 
-
-10) ===========================================================================
+9) ===========================================================================
 class CartItemsController < ApplicationController
   before_action :authenticate_customer!
   before_action :setup_cart_item!, only: [:update, :create, :destroy, :destroy_all]
@@ -372,12 +369,38 @@ class CartItemsController < ApplicationController
   end
 end
 
-11) ===========================================================================
+10) ===========================================================================
 class OrdersController < ApplicationController
-	before_action :authenticate_customer!
+  before_action :authenticate_customer!
+  include ApplicationHelper
+
   def new
     @order = Order.new
     @deliveries = current_customer.deliveries
+  end
+
+  def create
+    @order = Order.new(order_params)
+    @order.save
+    current_customer.cart_items.each do |cart_item|
+	@order_item = OrderItem.new
+	@order_item.order_id = @order.id
+	@order_item.item_id = cart_item.item_id
+	@order_item.tax_price = cart_item.tax_price
+	@order_item.quantity = cart_item.quantity
+	@order_item.save!
+    end
+    current_customer.cart_items.destroy_all
+    redirect_to orders_complete_path
+  end
+
+  def index
+    @orders = current_customer.orders
+  end
+
+  def show
+    @order = Order.find(params[:id])
+    @order_items = @order.order_items
   end
 
   def confirm
@@ -409,34 +432,10 @@ class OrdersController < ApplicationController
     end
   end
 
-  def create
-    @order = Order.new(order_params)
-    @order.save
-    current_customer.cart_items.each do |cart_item|
-	@order_item = OrderItem.new
-	@order_item.order_id = @order.id
-	@order_item.item_id = cart_item.item_id
-	@order_item.tax_price = cart_item.tax_price
-	@order_item.quantity = cart_item.quantity
-	@order_item.save!
-    end
-    current_customer.cart_items.destroy_all
-    redirect_to orders_complete_path
-  end
-
   def complete
     @order = Order.find(params[:id])
     @order.complete!
     redirect_to orders_path, notice: '注文を完了しました'
-  end
-
-  def index
-    @orders = current_customer.orders
-  end
-
-  def show
-    @order = Order.find(params[:id])
-    @order_items = @order.order_items
   end
 
   private
@@ -446,5 +445,12 @@ class OrdersController < ApplicationController
   end
 end
 
+11) ===========================================================================
 
+12) ===========================================================================
 
+13) ===========================================================================
+
+14) ===========================================================================
+
+15) ===========================================================================
