@@ -335,15 +335,21 @@ class CartItemsController < ApplicationController
     redirect_to cart_items_path
   end
 
-  def update    #--- PATCH/PUT /cart_items/:id
-    cart_item = CartItem.find(params[:id])
-    if cart_item.update(cart_item_params)
-      redirect_to cart_items_path, notice: 'カート内の商品を更新しました'
+  def create
+    @item = Item.find_by(id: params[:cart_item][:item_id])
+    if @item.present?
+      @cart_item = CartItem.new(customer_id: current_customer.id, item_id: @item.id, quantity: params[:cart_item][:quantity].to_i,)
+      if @cart_item.save
+        @cart_items = current_customer.cart_items
+        @total_price = @cart_items.inject(0) { |sum, cart_item| sum + cart_item.price }
+        flash[:notice] = "商品をカートにいれました"
+      else
+        flash[:alert] = "商品の追加に失敗しました"
+      end
     else
-      redirect_back(fallback_location: root_path)
+      flash[:alert] = "商品が見つかりません"
     end
-    @cart_items = current_customer.cart_items
-    @total_price = @cart_items.inject(0) { |sum, cart_item| sum + cart_item.price }
+    redirect_to cart_items_path
   end
 
   def destroy    #--- DELETE /cart_items/:id
