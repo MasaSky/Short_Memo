@@ -1,24 +1,24 @@
 controllers/
 ├── admin/
 |   ├── sessions_controller.rb [new, create, destroy]
-|   ├── homes_controller.rb [top]
-|   ├── items_controller.rb [index, new, create, show, edit, update]
-|   ├── customers_controller.rb [index, show, edit, update]
-|   ├── genres_controller.rb [index, create, edit, update]
-|   ├── orders_controller.rb [show, update]
-│   └── order_items_controller.rb [update]
+|   ├── homes_controller.rb [top]    ---1
+|   ├── items_controller.rb [index, new, create, show, edit, update]    ---6
+|   ├── customers_controller.rb [index, show, edit, update]    ---7
+|   ├── genres_controller.rb [index, create, edit, update]    ---5
+|   ├── orders_controller.rb [show, update]    ---12
+│   └── order_items_controller.rb [update]    ---11
 ├── concerns/
 │   └── ...
-├── application_controller.rb
+├── application_controller.rb    ---0
 └── public/
     ├── homes_controller.rb [top, about]
-    ├── items_controller.rb [index, show]
-    ├── registrations_controller.rb [new, create]
-    ├── sessions_controller.rb [new, create, destroy]
-    ├── customers_controller.rb [show, edit, update, quit, deactive]
-    ├── deliveries_controller.rb [index, create, edit, update, destroy]
-    ├── cart_items_controller.rb [index, update, destroy,destroy_all, create]
-    └── orders_controller.rb [new, confirm, complete, create, index, show]
+    ├── items_controller.rb [index, show]    --13
+    ├── registrations_controller.rb [new, create]    ---2
+    ├── sessions_controller.rb [new, create, destroy]    ---3
+    ├── customers_controller.rb [show, edit, update, quit, deactive]    ---4
+    ├── deliveries_controller.rb [index, create, edit, update, destroy]    ---8
+    ├── cart_items_controller.rb [index, update, destroy,destroy_all, create]    ---9
+    └── orders_controller.rb [new, confirm, complete, create, index, show]    ---10
 
 0) ===========================================================================
 class ApplicationController < ActionController::Base
@@ -466,6 +466,37 @@ class Admin::OrderItemsController < ApplicationController
 end
 
 12) ===========================================================================
+class Admin::OrdersController < ApplicationController
+  before_action :authenticate_admin!
+  include ApplicationHelper
+
+  def index
+    @orders = Order.all.page(params[:page]).per(10)
+  end
+
+  def show
+    @order = Order.find(params[:id])
+    @order_details = @order.order_details
+  end
+
+  def update
+　　if @order.update(order_params)
+  　　if @order.order_status == "入金確認"
+    　@order.order_items.update_all(production_status: 1)
+  　　end
+　　end
+    　flash[:notice] = "注文ステータスを変更しました"
+    　redirect_to admin_order_path(@order)
+  end
+
+  private
+
+  def order_params
+    params.require(:order).permit(:order_status)
+  end
+end
+
+13) ===========================================================================
 class Public::ItemsController < ApplicationController
 
   def index
@@ -478,8 +509,6 @@ class Public::ItemsController < ApplicationController
   end
 
 end
-
-13) ===========================================================================
 
 14) ===========================================================================
 
