@@ -58,17 +58,19 @@ class Admin::HomesController < ApplicationController
   end
 end
 
-
 2) ===========================================================================
 class Public::RegistrationsController < Devise::RegistrationsController
   before_action :configure_sign_up_params, only: [:create]
 
-  private
-
-  def configure_sign_up_params
-    devise_parameter_sanitizer.permit(:sign_up, keys:[:name])
+  def after_sign_up_path_for(resource)
+    root_path
   end
 
+  protected
+
+  def configure_sign_up_params
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :first_name_kana, :last_name_kana, :postal_code, :address, :telphone_number])
+  end
 end
 
 3) ===========================================================================
@@ -78,8 +80,6 @@ class Public::SessionsController < Devise::SessionsController
   def after_sign_in_path_for(resource)
     root_path
   end
-
-  private
 
 　def customer_state
   　if customer = Customer.find_by(email: params[:customer][:email])
@@ -94,6 +94,13 @@ class Public::SessionsController < Devise::SessionsController
   　end
 　end
 
+  protected
+
+  def authenticate_user
+    user = warden.authenticate(params[:user], scope: :user)
+    session[:user_id] = user.id
+    redirect_to after_sign_in_path_for(user)
+  end
 end
 
 4) ===========================================================================
