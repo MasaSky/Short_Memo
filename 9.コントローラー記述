@@ -1,6 +1,6 @@
 controllers/
 ├── admin/
-|   ├── sessions_controller.rb [new, create, destroy]
+|   ├── sessions_controller.rb [new, create, destroy]    ---15
 |   ├── homes_controller.rb [top]    ---1
 |   ├── items_controller.rb [index, new, create, show, edit, update]    ---6
 |   ├── customers_controller.rb [index, show, edit, update]    ---7
@@ -11,7 +11,7 @@ controllers/
 │   └── ...
 ├── application_controller.rb    ---0
 └── public/
-    ├── homes_controller.rb [top, about]
+    ├── homes_controller.rb [top, about]    ---14
     ├── items_controller.rb [index, show]    --13
     ├── registrations_controller.rb [new, create]    ---2
     ├── sessions_controller.rb [new, create, destroy]    ---3
