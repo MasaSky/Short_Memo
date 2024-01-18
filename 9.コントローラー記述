@@ -26,6 +26,9 @@ controllers/
 >>>rails g controller admin/homes
 >>>rails g controller public/homes
 
+>>>rails g devise:views admins    #---admins => admin 変更が必要
+>>>rails g devise:views publics
+
 0) ===========================================================================
 class ApplicationController < ActionController::Base
   before_action :configure_authentication	#---現在のコントローラーが管理者用かどうかに基づいて適切な認証メソッド（authenticate_user! または authenticate_admin!）を呼び出
