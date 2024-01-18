@@ -3,6 +3,7 @@
 	gem 'devise'
 	gem "enum_help"
 >>>bundle install
+>>> rails g devise:install
 
 +++config/application.rb
   module ***
