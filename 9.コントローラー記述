@@ -20,6 +20,12 @@ controllers/
     ├── cart_items_controller.rb [index, update, destroy,destroy_all, create]    ---9
     └── orders_controller.rb [new, confirm, complete, create, index, show]    ---10
 
+>>>rails g devise:controllers admin
+>>>rails g devise:controllers public
+
+>>>rails g controller admin/homes
+>>>rails g controller public/homes
+
 0) ===========================================================================
 class ApplicationController < ActionController::Base
   before_action :configure_authentication	#---現在のコントローラーが管理者用かどうかに基づいて適切な認証メソッド（authenticate_user! または authenticate_admin!）を呼び出
