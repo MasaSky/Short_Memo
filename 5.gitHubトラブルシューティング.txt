@@ -44,7 +44,7 @@ $ git init                                       # 現在いるディレクト�
 $ git add ファイル名                              # 「ファイル名」の部分にファイル名を指定することで、指定したファイルをインデックスに追加することができます。
 $ git commit -m "コメント"                        # メッセージをつけて変更履歴を保存する。
 $ git branch -M main                         　  # デフォルトブランチをmasterからmainに変更する。
-$ git remote add origin リポジトリURL             # originという名前でリモートリポジトリのURLを登録する。
+$ git remote add origin リポジトリURL             # originという名前でリモートリポジトリのURLを登録する。 ※※※SSHで登録
 $ git push origin ブランチ名                      # ローカルリポジトリの変更をリモートリポジトリにアップロードする。「ブランチ名」にアップロードしたいブランチの名前を指定します。
 
 ●2回目以降アップロード
