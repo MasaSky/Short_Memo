@@ -197,7 +197,8 @@ resources :books, only: [:show, :edit, :index, :update, :new, :create, :destroy]
   resources :users, only: [:show, :edit, :update]
 
 7)Bootstrapの導入
->>>$ yarn add jquery bootstrap@4.6.2 popper.js
+>>>yarn add jquery bootstrap@4.6.2 popper.js
+>>>yarn add bootstrap@5.3.0
 
 8)Active Strageの導入
 
