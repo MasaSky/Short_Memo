@@ -27,7 +27,7 @@ controllers/
 >>>rails g controller public/homes
 
 >>>rails g devise:views admins    #---admins => admin 変更が必要
->>>rails g devise:views publics
+>>>rails g devise:views publics    #---publics => public 変更が必要
 
 0) ===========================================================================
 class ApplicationController < ActionController::Base
