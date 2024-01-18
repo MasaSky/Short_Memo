@@ -421,6 +421,7 @@ class Public::OrdersController < ApplicationController
       redirect_to orders_complete_path
     else
       render :new
+    end
   end
 
   def complete
