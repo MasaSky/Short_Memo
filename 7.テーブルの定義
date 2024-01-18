@@ -42,6 +42,8 @@ ja:
 <deviseの作成> ($ rails g devise Model名)
 >>>rails g devise Customer
 ++++xxxxx_devise_create_customers.rb
+      t.datetime "created_at", null: false
+      t.datetime "updated_at", null: false
       t.string :last_name, null: false
       t.string :fisrt_name, null: false
       t.string :last_name_kana, null: false
