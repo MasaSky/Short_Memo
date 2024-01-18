@@ -513,7 +513,6 @@ end
 
 13) ===========================================================================
 class Public::ItemsController < ApplicationController
-
   def index
     @items = Item.page(params[:page]).per(10)
   end
@@ -522,7 +521,6 @@ class Public::ItemsController < ApplicationController
     @item = Item.find(params[:id])
     @cart_item=CartItem.new
   end
-
 end
 
 14) ===========================================================================
@@ -531,9 +529,9 @@ class Public::HomesController < ApplicationController
     @items = Item.all.order(id: :desc).limit(4)
   end
 end
+
 15) ===========================================================================
 class Admin::Admins::SessionsController < Devise::SessionsController
-
   def after_sign_in_path_for(resource)
     admin_homes_path
   end
