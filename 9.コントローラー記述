@@ -245,7 +245,6 @@ class Admin::ItemsController < ApplicationController
   def item_params
     params.require(:item).permit(:genre_id, :name, :introduction, :unit_price, :is_active)
   end
-
 end
 
 7) ===========================================================================
@@ -280,7 +279,6 @@ class Admin::CustomersController < ApplicationController
   def customer_params
     params.require(:customer).permit(:last_name, :first_name, :last_name_kana, :first_name_kana, :postal_code, :address, :telphone_number, :email, :is_active)
   end
-
 end
 
 8) ===========================================================================
@@ -328,7 +326,6 @@ class Public::DeliveriesController < ApplicationController
   def delivery_params
     params.require(:delivery).permit(:attention, :postal_code, :address)
   end
-
 end
 
 9) ===========================================================================
