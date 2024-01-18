@@ -179,7 +179,7 @@ $ rails g devise Admin # 強制的に作成したAdminモデルにdevise用の�
   validates :address, presence: true, length: { minimum: 7, maximum: 150 }
 
   def order_address
-	self.postal_code + self.address + self.name
+	self.postal_code + self.address + self.attention
   end
 
 +++class Genre < ApplicationRecord
