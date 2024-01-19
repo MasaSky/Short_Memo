@@ -57,6 +57,8 @@ git fetch origin				  # リモートリポジトリからローカルにある�
 git merge ブランチ名				  # ローカルブランチに反映する
 git pull origin ブランチ名			  # fetchとmergeをまとめて実行できるコマンド
 
+●ローカル変更分をリモートに上書き
+>>>git push -f origin main
 
 ●クローン作製
 $ git clone リポジトリURL                         # リモートリポジトリをローカルリポジトリに複製する（ダウンロード）
