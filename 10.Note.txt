@@ -29,6 +29,18 @@ end
 <% end %>
 
 ===
+app/models/item.rb
+
+def self.ransackable_attributes(auth_object = nil)
+        %w[name introduction]
+    end
+
+    def self.ransackable_associations(auth_object = nil)
+        []
+    end
+
+
+===
 
 eq. 完全に一致したものを抽出します。
 
