@@ -7,10 +7,6 @@ genreの索引ができてない
 before 以下の削除
 customer登録ができてない
 
-def set_search
-    @q = Item.ransack(params[:q])
-    @items = @q.result(distinct: true)
-end
 
 
 3.Gemifileに追加
@@ -18,3 +14,18 @@ ransack
 検索機能が有効になってない
 =>search_wordブロック内は不要
 set_searchブロック記述
+
+def set_search
+    @q = Item.ransack(params[:q])
+    @items = @q.result(distinct: true)
+end
+
+===
+<%= search_form_for @q do |f| %>
+    <%= f.label :name_cont %>
+    <%= f.search_field :name_cont %>
+
+    <%= f.submit %>
+<% end %>
+
+===
