@@ -1,6 +1,7 @@
 1.ルーティングの見直し
 collection => member => 削除
 genreの索引ができてない
+=>解決
 
 2.resistrationsの不要記述を削除
 before 以下の削除
@@ -9,3 +10,5 @@ customer登録ができてない
 3.Gemifileに追加
 ransack
 検索機能が有効になってない
+=>search_wordブロック内は不要
+set_searchブロック記述
