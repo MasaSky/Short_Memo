@@ -7,6 +7,12 @@ genreの索引ができてない
 before 以下の削除
 customer登録ができてない
 
+def set_search
+    @q = Item.ransack(params[:q])
+    @items = @q.result(distinct: true)
+end
+
+
 3.Gemifileに追加
 ransack
 検索機能が有効になってない
