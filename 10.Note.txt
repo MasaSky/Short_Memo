@@ -28,6 +28,9 @@ end
     <%= f.submit %>
 <% end %>
 
+
+<%= render 'search_word', q: @q, url: search_path %>
+
 ===
 app/models/item.rb
 
