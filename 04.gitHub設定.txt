@@ -63,6 +63,9 @@ git pull origin ブランチ名			  # fetchとmergeをまとめて実行でき�
 ●クローン作製
 $ git clone リポジトリURL                         # リモートリポジトリをローカルリポジトリに複製する（ダウンロード）
 
+>>>spring stop    #---migration
+
+
 ●変更戻し
 git reset コミット				  # 履歴を元に前の状態に戻す。「コミット」には識別番号を指定します。git reset HEAD^で一つ前に戻すことも可能
 
