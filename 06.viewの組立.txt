@@ -397,6 +397,21 @@ class Favorite < ApplicationRecord
   belongs_to :user
   belongs_to :post_image
 
+
   validates :user_id, uniqueness: {scope: :post_image_id}
 
 end
+
+============================================================================================
+
+<% if app.empty? %>
+  # app オブジェクトは空の配列またはハッシュ
+<% else %>
+  # app オブジェクトは存在し、空の配列またはハッシュではない
+<% end %>
+
+<% if app.blank? %>
+  # app オブジェクトは nil または空
+<% else %>
+  # app オブジェクトは存在し、空ではない
+<% end %>
