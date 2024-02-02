@@ -1,15 +1,14 @@
 1)appの作成
 2)appをアクセス可能にする
-3)modelの確立
-4)deviseの導入
-5)controllerの設定
-6)routeの設定
-7)bootstrapの導入
-8)Active Strageの導入
-9)viewの組立、Pagenationの導入
-10)GEMIFILE
+3)Active Strageの導入
+4)bootstrap&Font Awesomeの導入
+5)Pagenationの導入
+6)deviseの導入
+7)modelの確立
+8)controllerの設定
+9)routeの設定
 
-==============================
+==================================================================================================================================
 1) appの作成
 rails new ***  /// rm -rf ***
 
@@ -21,7 +20,163 @@ username:~/environment/*** $ yarn add @babel/plugin-proposal-private-methods @ba
 +++
 >>> config.hosts.clear
 
-3)modelの確立
+==================================================================================================================================
+3)Active Strageの導入
+
+a-1)<Active Storage>  environment/*** $
+rails active_storage:install
+rails db:migrate
+
+a-2)<Gemfile>Active Strage
+# gem 'image_processing', '~>1.2'
+↓
+gem 'image_processing', '~>1.2'
+>>>*** $ bundle install
+
+a-3)config/environments/development.rb
++++ config.active_job.queue_adapter = :inline
+>>>$ bundle install
+
+a-4)***/app/asses/images/
+イメージファイルを保存
+
+4)Bootstrapの導入
+c-1) インストール
+>>>yarn add jquery bootstrap@4.6.2 popper.js
+>>>yarn add bootstrap@5.3.0
+
+c-2)config/webpack/environment.js
++++
+const webpack = require('webpack')
+environment.plugins.prepend(
+  'Provide',
+  new webpack.ProvidePlugin({
+    $: 'jquery/src/jquery',
+    jQuery: 'jquery/src/jquery',
+    Popper: 'popper.js'
+  })
+)
+
+c-3)app/javascript
++++ stylesheets/application.scss
++++ @use '~bootstrap/scss/bootstrap';
+
+c-4)app/javascript/packs/application.js
++++
+import "jquery";
+import "popper.js";
+import "bootstrap";
+import "../stylesheets/application"; 
+
+c-5)app/views/layouts/application.html.erb
+<%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+=> <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+
+〇Font Awesome
+
+<script src="https://kit.fontawesome.com/56a079a110.js" crossorigin="anonymous"></script>
+
+  <head>
+    <title>BookersVer2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+　　<%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <script src="https://kit.fontawesome.com/56a079a110.js" crossorigin="anonymous"></script>
+    <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+〇Webpackerが起動しない？
+・appの外部アクセスが要因
+・Webpackerの再インストール
+>>>
+x-1)ターミナルで、Railsアプリケーションのルートディレクトリに移動します。
+x-2)bundle exec rails webpacker:installコマンドを実行します。
+
+y-1)すべての環境でWebpackerを再インストールすることもできます。
+y-2)bundle exec rails webpacker:install:all
+
+
+5)Pagenationの導入
+
+〇Pagenation
+>>>"Gemifile" +++ gem 'kaminari','~> 1.2.1'
+>>>$ bundle install
+>>>rails g kaminari:config
+>>>rails g kaminari:views default
+>>>"config/initializers/kaminari_config.rb"+++ config.default_per_page = 5      #---5ページ毎
+
+>>> " def index" ***.all => ***.page(params[:page])
+>>>+++.page(params[:page])
+>>><%= paginate post_images %>
+
+==================================================================================================================================
+6)deviseの導入
+b-1)<Gemifile>devise
++++ gem 'devise'
+>>>*** $ bundle install
+>>>*** $ rails g devise:install
+
+
+b-2)Admin
+>>> rails g devise Admin
+>>> rails g devise:controllers admin
+>>> rails db:migrate
+>>> rails g devise:views admins
+
+---admins => admin 変更
+
+b-3)User
+>>> rails g devise User
+>>> rails db:migrate
+
+b-4)Publicフォルダを作成し、UserをPublicに移行
+>>> rails g devise:controllers public
+>>> rails g devise:views public
+
+---publics => public 変更
+>>> mkdir app/controllers/public
+>>>mv app/controllers/{favorites,homes,post_comments,post_images,users}_controller.rb app/controllers/public/
+<<<app/viewsにpublicフォルダを作成し、app/views/deviseの中身をapp/views/publicの内に移動
+<<<また、app/viewsの配下のadmin、layouts、kaminariのフォルダ以外もapp/views/publicの内に移動
+
++++class Public::各Controller < ApplicationController ※記述変更
+cf. class Public::UsersController < ApplicationController
+
+>>> rails g controller public/items
+他のコントローラー作成
+
+<権限の設定>
++++application_controller.rb
+  before_action :authenticate_user!, except: [:top], unless: :admin_controller? #----追加
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
+  private
+
+  def configure_authentication
+    if admin_controller?
+      authenticate_admin!
+    else
+      authenticate_user! unless public_controller?
+    end
+  end
+
+  def admin_controller?
+    self.class.module_parent_name == 'Admin'
+  end
+
+  def public_controller?
+    self.class.module_parent_name == 'Public'
+  end
+
+  def configure_permitted_parameters
+      devise_parameter_sanitizer.permit(:sign_up, keys: [:last_name, :first_name, :last_name_kana, :first_name_kana, :postal_code, :address, :telphone_number])
+  end
+
+
+==================================================================================================================================
+7)modelの確立（データベース）
 Create 'model' => cf) List, Book, User
 rails g model ***
 // app/model/***.rb
@@ -145,21 +300,9 @@ cf:class Order < ApplicationRecord
   validates :postal_code, presence: true, length: { is: 7 }, numericality: { only_integer: true }
   validates :address, presence: true, length: { minimum: 7, maximum: 150 }
 
-4)deviseの導入
-a-1)<Gemifile>devise
-+++ gem 'devise'
->>>*** $ bundle install
->>>*** $ rails g devise:install
 
-<汎用設定>
-a-2)User
->>>*** $ rails g devise User
-
-a-3) db/migrate/（年月日時分秒）_devise_create_users.rb
-+++ t.string :name
->>> rails db:migrate
-
-5)controllerの設定
+==================================================================================================================================
+8)controllerの設定
 <汎用設定>
 >>>rails g controller *** top index show edit ... etc
 new, index, create, show, edit, update, destroy
@@ -169,7 +312,8 @@ new, index, create, show, edit, update, destroy
 // controllers/concerns/***_controller.rb
 
 
-6) routeの設定
+==================================================================================================================================
+9) routeの設定
 Routing
 +++ resources :***
 >>>$ rails routes
@@ -196,71 +340,81 @@ resources :books, only: [:show, :edit, :index, :update, :new, :create, :destroy]
   end
   resources :users, only: [:show, :edit, :update]
 
-7)Bootstrapの導入
->>>yarn add jquery bootstrap@4.6.2 popper.js
->>>yarn add bootstrap@5.3.0
+〇scope
+※URLは指定のパスにしたい/ファイル構成変えたくない
+articles_path	GET	/blog/articles(.:format)	articles#index
 
-8)Active Strageの導入
+                  POST	/blog/articles(.:format)	articles#create
 
-b-1)<Active Storage>  environment/*** $
-rails active_storage:install
-rails db:migrate
+new_article_path	GET	/blog/articles/new(.:format)	articles#new
 
-b-2)<Gemfile>Active Strage
-# gem 'image_processing', '~>1.2'
-↓
-gem 'image_processing', '~>1.2'
->>>*** $ bundle install
+edit_article_path	GET	/blog/articles/:id/edit(.:format)	articles#edit
 
-b-3)config/environments/development.rb
-+++ config.active_job.queue_adapter = :inline
->>>$ bundle install
+article_path	GET	/blog/articles/:id(.:format)	articles#show
 
-b-4)***/app/asses/images/
-イメージファイルを保存
+                  PATCH	/blog/articles/:id(.:format)	articles#update
+
+                  PUT	/blog/articles/:id(.:format)	articles#update
+
+                  DELETE	/blog/articles/:id(.:format)	articles#destroy
 
 
-9)viewの組立、Pagenationの導入
+〇namespace
+※顧客がアクセスする商品一覧ページのURL : https://xxxxx.com/items
 
-〇Pagenation
->>>"Gemifile" +++ gem 'kaminari','~> 1.2.1'
->>>$ bundle install
->>>rails g kaminari:config
->>>rails g kaminari:views default
->>>"config/initializers/kaminari_config.rb"+++ config.default_per_page = 5      #---5ページ毎
+blog_articles_path	GET	/blog/articles(.:format)	blog/articles#index
 
->>> " def index" ***.all => ***.page(params[:page])
->>>+++.page(params[:page])
->>><%= paginate post_images %>
+                        POST	/blog/articles(.:format)	blog/articles#create
 
+new_blog_article_path	GET	/blog/articles/new(.:format)	blog/articles#new
 
-10)GEMIFILE
+edit_blog_article_path	GET	/blog/articles/:id/edit(.:format)	blog/articles#edit
 
+blog_article_path	GET	/blog/articles/:id(.:format)	blog/articles#show
 
+                  PATCH	/blog/articles/:id(.:format)	blog/articles#update
 
-===========================トラブルシューティング
-〇Webpackerが起動しない？
-・appの外部アクセスが要因
-・Webpackerの再インストール
->>>
-x-1)ターミナルで、Railsアプリケーションのルートディレクトリに移動します。
-x-2)bundle exec rails webpacker:installコマンドを実行します。
+                  PUT	/blog/articles/:id(.:format)	blog/articles#update
 
-y-1)すべての環境でWebpackerを再インストールすることもできます。
-y-2)bundle exec rails webpacker:install:all
+                  DELETE	/blog/articles/:id(.:format)	blog/articles#destroy
 
 
-〇Font Awesome
+〇scope module:
+※URLは変えたくない/ファイル構成だけ指定のパスにしたい
+articles_path	GET	/articles(.:format)	blog/articles#index
 
-<script src="https://kit.fontawesome.com/56a079a110.js" crossorigin="anonymous"></script>
+                  POST	/articles(.:format)	blog/articles#create
 
-  <head>
-    <title>BookersVer2</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-　　<%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+new_article_path	GET	/articles/new(.:format)	blog/articles#new
 
-    <script src="https://kit.fontawesome.com/56a079a110.js" crossorigin="anonymous"></script>
-    <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
-  </head>
+edit_article_path	GET	/articles/:id/edit(.:format)	blog/articles#edit
+
+article_path	GET	/articles/:id(.:format)	blog/articles#show
+
+                  PATCH	/articles/:id(.:format)	blog/articles#update
+
+                  PUT	/articles/:id(.:format)	blog/articles#update
+
+                  DELETE	/articles/:id(.:format)	blog/articles#destroy
+
+〇collection
+※urlに:idが追加されていません。
+resource :user_sign_ups do
+  collection do
+    get :tell 
+  end
+end
+=> /user_sign_ups/tell
+
+〇member
+resources :users  do
+  member do
+    get :logout
+  end
+end
+=> /users/:id/logout
+
+==================================================================================================================================
+
+
+
