@@ -99,3 +99,10 @@ git pull origin main
 
 ③ ここまできたらあとは最初から実行
 main.textを作って、git addしてcommitして、pushする。
+
+========================================================================================
+
+>>>Gemfile
+version合わせ => Gemifile記述変更
+=>Gemilock　記述全削除
+>>> bundle install
