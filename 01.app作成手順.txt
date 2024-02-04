@@ -20,6 +20,9 @@ username:~/environment/*** $ yarn add @babel/plugin-proposal-private-methods @ba
 +++
 >>> config.hosts.clear
 
+<yarm install>
+>>>npm install --global yarn
+
 ==================================================================================================================================
 3)Active Strageの導入
 
