@@ -1,3 +1,21 @@
+1.
+>>>ssh-keygen
+実行後に入力(パスフレーズ)を求められますが、全て未入力で Enter キーを押してください。
+>>>clip < ~/.ssh/id_rsa.pub		#---クリップボードにSSHをコピー
+>>>gitHubを開いてSSH keysの新規登録画面へ
++++ keyに貼り付け
+>>>ssh git@github.com
+The authenticity of host 'github.com (×××.×××.×××.×××)' can't be established.
+RSA key fingerprint is SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8.
+Are you sure you want to continue connecting (yes/no/[fingerprint])?
+=> yes +enter
+
+>>>cat ~/.ssh/id_rsa.pub
+
+>>>ssh -T git@github.com
+
+>>>git init
+
 ●username, passwordを聞かれる→SSH
 [root@www ◯◯]# git remote set-url origin git@github.com:
 [root@www ◯◯]# 
@@ -28,16 +46,6 @@ Already up-to-date.
 
 ●git@github.com: Permission denied (publickey).
 
->>>ssh-keygen
-実行後に入力(パスフレーズ)を求められますが、全て未入力で Enter キーを押してください。
->>>clip < ~/.ssh/id_rsa.pub		#---クリップボードにSSHをコピー
->>>gitHubを開いてSSH keysの新規登録画面へ
-+++ keyに貼り付け
->>>ssh git@github.com
-The authenticity of host 'github.com (×××.×××.×××.×××)' can't be established.
-RSA key fingerprint is SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8.
-Are you sure you want to continue connecting (yes/no/[fingerprint])?
-=> yes +enter
 
 ●初回登録
 $ git init                                       # 現在いるディレクトリをgitで管理するための設定ファイルを生成する。
