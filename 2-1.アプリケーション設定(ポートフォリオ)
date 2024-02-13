@@ -1,0 +1,51 @@
+
+================================================================================================================================
+  devise_for :users,skip: [:passwords], controllers: {registrations: 'public/registrations', sessions: 'public/sessions'}
+  devise_for :admin, skip: [:registrations, :password], controllers: {
+    sessions: 'admin/sessions'
+  }
+
+  namespace :admin do
+    get 'admin' => 'homes#top'
+    resources :offers, only: [:index, :show, :destroy] do
+      collection do
+        delete 'destroy_comment' => 'offers#destroy_comment'
+      end
+    end
+    resources :users, only: [:index, :show, :edit, :update]
+  end
+
+  scope module: :public do
+    root to: 'homes#top'
+    get 'homes/about', to: 'homes#about', as: :about
+    #---offers
+    resources :offers, only: [:new, :create, :show, :edit, :update, :index] do
+      resource :favorites, only: [:create, :destroy]
+      resources :comments, only: [:create, :destroy, :edit, :update]
+      resources :applications, only: [:new, :create, :show, :edit, :update, :index] do
+        collection do
+          get 'thanx' => 'applications#thanx'
+        end
+      end
+      resources :deals, only: [:new, :create, :show, :edit, :update, :index] do
+        resource :chattings, only: [:create, :destroy]
+        resources :reviews, only: [:new, :create, :show, :edit, :update]
+      end
+    end
+    #---users
+    resources :users, only: [:index, :show, :edit, :update] do
+      collection do
+        get 'quit' => 'users#quit', as: 'quit'
+        patch 'deactive' => 'users#deactive'
+        get 'offers' => 'users#offers'
+        get 'applications' => 'users#applications'
+        get 'deals' => 'users#deals'
+        get 'favorites' => 'users#favorites'
+        get 'followers' => 'users#followers'
+        get 'reviews' => 'users#reviews'
+      end
+      resource :relationships, only: [:create, :destroy]
+      resources :locations, only: [:index, :create, :edit, :update, :destroy]
+    end
+  end
+  ================================================================================================================================
