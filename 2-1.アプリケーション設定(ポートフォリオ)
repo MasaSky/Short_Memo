@@ -18,6 +18,7 @@
   scope module: :public do
     root to: 'homes#top'
     get 'homes/about', to: 'homes#about', as: :about
+    resources :notifications, only: [:index]
     #---offers
     resources :offers, only: [:new, :create, :show, :edit, :update, :index] do
       resource :favorites, only: [:create, :destroy]
