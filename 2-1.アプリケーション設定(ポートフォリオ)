@@ -26,10 +26,11 @@
           get 'thanx' => 'applications#thanx'
         end
       end
-      resources :deals, only: [:new, :create, :show, :edit, :update, :index] do
-        resource :chattings, only: [:create, :destroy]
-        resources :reviews, only: [:new, :create, :show, :edit, :update]
-      end
+    end
+    #---deals
+    resources :deals, only: [:new, :create, :show, :edit, :update, :index] do
+      resource :chattings, only: [:create, :destroy]
+      resources :reviews, only: [:new, :create, :show, :edit, :update]
     end
     #---users
     resources :users, only: [:index, :show, :edit, :update] do
