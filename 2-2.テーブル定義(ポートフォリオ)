@@ -20,8 +20,8 @@ create_table :location do |t|
   t.integer :longitude, null: false
 end
 
-create_table :location do |t|
-  t.integer :user_id, null: false
+create_table :offer do |t|
+  t.references :user_id, null: false, foreign_key: true
   t.string :title, null: false
   t.text :description, null: false
   t.datetime :work_date, null: false
@@ -31,5 +31,55 @@ create_table :location do |t|
   t.string :reward, null: false
   t.integer :offer_status, null: false
   t.boolean :is_deleted, null: false, default: false
+end
+
+create_table :favorite do |t|
+  t.references :user, null: false, foreign_key: true
+  t.references :offer, null: false, foreign_key: true
+end
+
+create_table :comment do |t|
+  t.references :user, null: false, foreign_key: true
+  t.references :offer, null: false, foreign_key: true
+  t.text :comment, null: false
+end
+
+create_table :application do |t|
+  t.references :offer, null: false, foreign_key: true
+  t.references :offerer_id, null: false, foreign_key: true
+  t.references :acceptor_id, null: false, foreign_key: true
+  t.integer :application_status, null: false
+end
+
+create_table :deal do |t|
+  t.references :offer, null: false, foreign_key: true
+  t.references :offerer_id, null: false, foreign_key: true
+  t.references :acceptor_id, null: false, foreign_key: true
+  t.datetime :work_date, null: false
+  t.integer :deal_status, null: false
+end
+
+create_table :chatting do |t|
+  t.references :deal, null: false, foreign_key: true
+  t.references :user, null: false, foreign_key: true
+  t.text :chat, null: false
+end
+
+create_table :chatting do |t|
+  t.references :deal, null: false, foreign_key: true
+  t.references :offerer_id, null: false, foreign_key: true
+  t.references :acceptor_id, null: false, foreign_key: true
+  t.text :review, null: false
+  t.float :all_rating, null: false, default: 0
+  t.float :rating1, null: false, default: 0
+  t.float :rating2, null: false, default: 0
+  t.float :rating3, null: false, default: 0
+  t.float :rating4, null: false, default: 0
+end
+
+create_table :relationship do |t|
+  t.integer :follower_id, null: false, foreign_key: true
+  t.integer :followed_id, null: false, foreign_key: true
+end
 
 ================================================================================================================================
