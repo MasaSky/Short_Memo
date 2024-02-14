@@ -178,12 +178,90 @@ end
 ================================================================================================================================
 08
 class Public::OffersController < ApplicationController
+  before_action :set_offer, only: [:edit, :update, :close, select_candidate]
+  def new
+    @offer = Offer.new
+  end
+
+  def create
+    @offer = current_user.offers.build(offer_params)
+    if @offer.save
+      redirect_to :thanx, notice: "依頼を作成しました。"
+    else
+      render :new
+    end
+  end
+
+  def thanx
+  end
+
+  def show
+    @offer = Offer.find(params[:id])
+    @applications = @offer.applications
+  end
+
+  def edit
+  end
+
+  def update
+    if @request.update(request_params)
+      redirect_to @offer, notice: "依頼を更新しました。"
+    else
+      render :edit
+    end
+  end
+
+  def close
+    @offer.close!
+    redirect_to offers_path, notice: "依頼を締め切りました。"
+  end
+
+  def select_candidate
+    @candidates = @offer.applications.order(created_at: :asc)
+    if @offer.select_candidate(params[:candidate_ids])
+      redirect_to @offer, notice: "応募者を選定しました。"
+    else
+      render :show
+    end
+  end
+
+  
+
+  private
+
+  set set_offer
+     @offer = current_user.offers.find(params[:id])
+  end
+
+  def request_params
+    params.require(:request).permit(:title, :description, :work_date, :location, :reward)
+  end
+end
 ================================================================================================================================
 09
 ================================================================================================================================
 10
 ================================================================================================================================
 11
+class ApplicationsController < ApplicationController
+  before_action :authenticate_user!
+
+  def create
+    @offer = Offer.find(params[:offer_id])
+    @application = @offer.applications.build(application_params.merge(candidate_id: current_user.id))
+    if @application.save
+      redirect_to @offer, notice: "応募しました。"
+    else
+      redirect_to @offer, notice: "応募に失敗しました。"
+    end
+  end
+
+  private
+
+  def application_params
+    params.require(:application).permit(:appeal)
+  end
+end
 ================================================================================================================================
 12
 ================================================================================================================================
