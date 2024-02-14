@@ -136,10 +136,11 @@ class Public::CustomersController < ApplicationController
   end
 
   def offers
-    @offers = @user.offers.where(offer_status: :true).all
+    @offers = @user.offers.where(is_deleted: :false).page(params[:page]).per(10)
   end
 
   def applications
+    @applications = @user.applications.where(is_deleted: :false).page(params[:page]).per(10)
   end
 
   def deals
@@ -149,9 +150,12 @@ class Public::CustomersController < ApplicationController
   end
 
   def followings
+    @name = @user.name
+    @users = @users.followings.page(params[:page]).per(10)
   end
 
   def reviews
+    @reviews = @users.reviews.page(params[:page]).per(10)
   end
 
   private
