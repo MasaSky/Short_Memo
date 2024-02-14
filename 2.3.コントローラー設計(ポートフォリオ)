@@ -1,14 +1,14 @@
 controllers/
 ├── admin/
-|   ├── sessions_controller.rb [new, create, destroy]    ---02
-|   ├── homes_controller.rb [top]    ---03
-|   ├── offers_controller.rb [index, show, destroy, destroy_comment]    ---04
-|   ├── users_controller.rb [index, show, edit, update]    ---05
+|   ├── sessions_controller.rb [new, create, destroy]    ---A01
+|   ├── homes_controller.rb [top]    ---A02
+|   ├── offers_controller.rb [index, show, destroy, destroy_comment]    ---A03
+|   ├── users_controller.rb [index, show, edit, update]    ---A04
 ├── concerns/
 │   └── ...
 ├── application_controller.rb    ---01
 └── public/
-    ├── homes_controller.rb [top, about]    ---
+    ├── homes_controller.rb [top, about]    ---02
     ├── registrations_controller.rb [new, create]    ---
     ├── sessions_controller.rb [new, create, destroy]    ---
     ├── users_controller.rb [top, show, edit, update, quit, deactive, offers, applications, deals, favorites, followers, reviews]    ---
@@ -52,7 +52,13 @@ protected
   end
 end
 ================================================================================================================================
-02
+
+
+
+
+
+================================================================================================================================
+A01
 class Admin::SessionsController < Devise::SessionsController
   def after_sign_in_path_for(resource)
     flash[:notice] = "管理者ページにログインしました"
@@ -65,7 +71,7 @@ class Admin::SessionsController < Devise::SessionsController
   end
 end
 ================================================================================================================================
-03
+A02
 class Admin::HomesController < ApplicationController
   def top
     @count_offer = Offer.offered_today.count
@@ -77,3 +83,6 @@ class Admin::HomesController < ApplicationController
   end
 end
 ================================================================================================================================
+A03
+================================================================================================================================
+A04
