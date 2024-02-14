@@ -248,9 +248,9 @@ class ApplicationsController < ApplicationController
     @offer = Offer.find(params[:offer_id])
     @application = @offer.applications.build(application_params.merge(applicant_id: current_user.id))
     if @application.save
-      redirect_to @offer, notice: "応募しました。"
+      redirect_to @offer, notice: "応募しました"
     else
-      redirect_to @offer, notice: "応募に失敗しました。"
+      redirect_to @offer, notice: "応募に失敗しました"
     end
   end
 
