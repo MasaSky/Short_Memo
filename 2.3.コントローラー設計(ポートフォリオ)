@@ -9,19 +9,19 @@ controllers/
 ├── application_controller.rb    ---01
 └── public/
     ├── homes_controller.rb [top, about]    ---02
-    ├── registrations_controller.rb [new, create]    ---
-    ├── sessions_controller.rb [new, create, destroy]    ---
-    ├── users_controller.rb [top, show, edit, update, quit, deactive, offers, applications, deals, favorites, followers, reviews]    ---
-    ├── notificatons_controller.rb [index]    ---
-    ├── relations_controller.rb [create, destroy]    ---
-    ├── locations_controller.rb [index, create, edit, update, destroy]    ---
-    ├── offers_controller.rb [new, create, show, edit, update, index]    ---
-    |── favorites_controller.rb [create, destroy]    ---
-    |── comments_controller.rb [create, destroy, edit, update]    ---
-    |── applications_controller.rb [new, create, thanx, show, destroy, edit, update, index]    ---
-    ├── deals_controller.rb [new, create, show, edit, update, index]    ---
-    ├── chattings_controller.rb [create, destroy]    ---
-    └── reviews_controller.rb [new, create, show, edit, update]    ---
+    ├── registrations_controller.rb [new, create]    ---03
+    ├── sessions_controller.rb [new, create, destroy]    ---04
+    ├── users_controller.rb [top, show, edit, update, quit, deactive, offers, applications, deals, favorites, followers, reviews]    ---05
+    ├── notificatons_controller.rb [index]    ---06
+    ├── relations_controller.rb [create, destroy]    ---07
+    ├── locations_controller.rb [index, create, edit, update, destroy]    ---08
+    ├── offers_controller.rb [new, create, show, edit, update, index]    ---09
+    |── favorites_controller.rb [create, destroy]    ---10
+    |── comments_controller.rb [create, destroy, edit, update]    ---11
+    |── applications_controller.rb [new, create, thanx, show, destroy, edit, update, index]    ---12
+    ├── deals_controller.rb [new, create, show, edit, update, index]    ---13
+    ├── chattings_controller.rb [create, destroy]    ---14
+    └── reviews_controller.rb [new, create, show, edit, update]    ---15
 
 ================================================================================================================================
 01
