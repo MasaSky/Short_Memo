@@ -104,9 +104,66 @@ class Public::SessionsController < Devise::SessionsController
 end
 ================================================================================================================================
 05
+class Public::CustomersController < ApplicationController
+    before_action :set_current_user
 
+  def top
+  end
 
+  def info
+  end
 
+  def edit
+  end
+
+  def update
+    if @user.update(user_params)
+      flash[:notice] = "登録情報を更新しました"
+      redirect_to user_info_path(current_user)
+    else
+      render :edit
+    end
+  end
+
+  def quit
+  end
+
+  def deactive
+    @user.update(is_active: false)
+    reset_session
+    flash[:notice] = "退会完了しました"
+    redirect_to root_path
+  end
+
+  def offers
+    @offers = @user.offers.where(offer_status: :true).all
+  end
+
+  def applications
+  end
+
+  def deals
+  end
+
+  def favorites
+  end
+
+  def followings
+  end
+
+  def reviews
+  end
+
+  private
+
+  def set_current_customer
+    @user = current_customer
+  end
+
+  def user_params
+      params.require(:customer).permit(:last_name, :first_name, :introduction)
+  end
+end
 ================================================================================================================================
 06
 
