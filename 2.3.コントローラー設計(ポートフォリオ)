@@ -1,0 +1,26 @@
+controllers/
+├── admin/
+|   ├── sessions_controller.rb [new, create, destroy]    ---
+|   ├── homes_controller.rb [top]    ---
+|   ├── offers_controller.rb [index, show, destroy, destroy_comment]    ---
+|   ├── users_controller.rb [index, show, edit, update]    ---
+├── concerns/
+│   └── ...
+├── application_controller.rb    ---
+└── public/
+    ├── homes_controller.rb [top, about]    ---
+    ├── registrations_controller.rb [new, create]    ---
+    ├── sessions_controller.rb [new, create, destroy]    ---
+    ├── users_controller.rb [top, show, edit, update, quit, deactive, offers, applications, deals, favorites, followers, reviews]    ---
+    ├── notificatons_controller.rb [index]    ---
+    ├── relations_controller.rb [create, destroy]    ---
+    ├── locations_controller.rb [index, create, edit, update, destroy]    ---
+    ├── offers_controller.rb [new, create, show, edit, update, index]    ---
+    |── favorites_controller.rb [create, destroy]    ---
+    |── comments_controller.rb [create, destroy, edit, update]    ---
+    |── applications_controller.rb [new, create, thanx, show, destroy, edit, update, index]    ---
+    ├── deals_controller.rb [new, create, show, edit, update, index]    ---
+    ├── chattings_controller.rb [create, destroy]    ---
+    └── reviews_controller.rb [new, create, show, edit, update]    ---
+
+================================================================================================================================
