@@ -1,9 +1,9 @@
 controllers/
 ├── admin/
-|   ├── sessions_controller.rb [new, create, destroy]    ---
-|   ├── homes_controller.rb [top]    ---
-|   ├── offers_controller.rb [index, show, destroy, destroy_comment]    ---
-|   ├── users_controller.rb [index, show, edit, update]    ---
+|   ├── sessions_controller.rb [new, create, destroy]    ---02
+|   ├── homes_controller.rb [top]    ---03
+|   ├── offers_controller.rb [index, show, destroy, destroy_comment]    ---04
+|   ├── users_controller.rb [index, show, edit, update]    ---05
 ├── concerns/
 │   └── ...
 ├── application_controller.rb    ---01
@@ -49,6 +49,31 @@ protected
 
   def configure_permitted_parameters
       devise_parameter_sanitizer.permit(:sign_up, keys: [:username, :last_name, :first_name, :introduction])
+  end
+end
+================================================================================================================================
+02
+class Admin::SessionsController < Devise::SessionsController
+  def after_sign_in_path_for(resource)
+    flash[:notice] = "管理者ページにログインしました"
+    admin_top_path
+  end
+
+  def after_sign_out_path_for(resource)
+    flash[:notice] = "管理者ページにログアウトしました"
+    new_admin_session_path
+  end
+end
+================================================================================================================================
+03
+class Admin::HomesController < ApplicationController
+  def top
+    @count_offer = Offer.offered_today.count
+    @count_user = User.newuser_today.count
+    @count_review = Offer.reviewed_today.count
+    @total_offer = Offer.all.count
+    @total_user = User.all.count
+    @total_review = Review.all.count
   end
 end
 ================================================================================================================================
