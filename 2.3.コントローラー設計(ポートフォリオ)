@@ -52,8 +52,18 @@ protected
   end
 end
 ================================================================================================================================
+02
+class Public::HomesController < ApplicationController
+  def top
+    @offers = Offer.where(offer_status: :true).order(created_at: :desc).limit(4)
+    @locations = @offers.map(&:location)
+  end
 
-
+  def about
+  end
+end
+================================================================================================================================
+03
 
 
 
