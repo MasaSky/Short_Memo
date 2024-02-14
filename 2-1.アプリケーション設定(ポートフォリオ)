@@ -33,9 +33,12 @@
       resources :reviews, only: [:new, :create, :show, :edit, :update]
     end
     #---users
-    resources :users, only: [:index, :show, :edit, :update] do
+    resources :users do
       collection do
-        get 'quit' => 'users#quit', as: 'quit'
+        get 'info' => 'users#info'
+        get 'info/edit' => 'users#edit'
+        patch 'update' => 'users#update'
+        get 'quit' => 'users#quit'
         patch 'deactive' => 'users#deactive'
         get 'offers' => 'users#offers'
         get 'applications' => 'users#applications'
