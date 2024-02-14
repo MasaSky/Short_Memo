@@ -24,6 +24,7 @@
       resources :applications, only: [:new, :create, :show, :edit, :update, :index] do
         collection do
           get 'thanx' => 'applications#thanx'
+          post 'select_applicant' => 'applications#select_applicant'
         end
       end
     end
