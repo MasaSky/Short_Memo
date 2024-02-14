@@ -108,6 +108,7 @@ class Public::CustomersController < ApplicationController
     before_action :set_current_user
 
   def top
+    
   end
 
   def info
@@ -144,9 +145,11 @@ class Public::CustomersController < ApplicationController
   end
 
   def deals
+    @deals = @user.deals.where(is_deleted: :false).page(params[:page]).per(10)
   end
 
   def favorites
+    @favorites = Offer.includes(:favorite).where(favorites: { user_id: @user.id }).page(params[:page]).per(10)
   end
 
   def followings
