@@ -186,7 +186,7 @@ class Public::OffersController < ApplicationController
   def create
     @offer = current_user.offers.build(offer_params)
     if @offer.save
-      redirect_to :thanx, notice: "依頼を作成しました。"
+      redirect_to :thanx, notice: "仕事依頼を投稿しました"
     else
       render :new
     end
@@ -205,7 +205,7 @@ class Public::OffersController < ApplicationController
 
   def update
     if @request.update(request_params)
-      redirect_to @offer, notice: "依頼を更新しました。"
+      redirect_to @offer, notice: "仕事依頼を更新しました"
     else
       render :edit
     end
@@ -213,19 +213,17 @@ class Public::OffersController < ApplicationController
 
   def close
     @offer.close!
-    redirect_to offers_path, notice: "依頼を締め切りました。"
+    redirect_to offers_path, notice: "仕事依頼を締め切りました"
   end
 
   def select_candidate
-    @candidates = @offer.applications.order(created_at: :asc)
-    if @offer.select_candidate(params[:candidate_ids])
-      redirect_to @offer, notice: "応募者を選定しました。"
+    @applicants = @offer.applications.order(created_at: :asc)
+    if @offer.select_applicant(params[:applicant_ids])
+      redirect_to @offer, notice: "応募者を選定しました"
     else
       render :show
     end
   end
-
-  
 
   private
 
@@ -248,7 +246,7 @@ class ApplicationsController < ApplicationController
 
   def create
     @offer = Offer.find(params[:offer_id])
-    @application = @offer.applications.build(application_params.merge(candidate_id: current_user.id))
+    @application = @offer.applications.build(application_params.merge(applicant_id: current_user.id))
     if @application.save
       redirect_to @offer, notice: "応募しました。"
     else
