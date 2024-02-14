@@ -21,7 +21,8 @@ create_table :location do |t|
 end
 
 create_table :offer do |t|
-  t.references :user_id, null: false, foreign_key: true
+  t.references :user, null: false, foreign_key: true
+  t.references :offerer, null: false, foreign_key: true
   t.string :title, null: false
   t.text :description, null: false
   t.datetime :work_date, null: false
@@ -46,15 +47,15 @@ end
 
 create_table :application do |t|
   t.references :offer, null: false, foreign_key: true
-  t.references :offerer_id, null: false, foreign_key: true
-  t.references :acceptor_id, null: false, foreign_key: true
+  t.references :offerer, null: false, foreign_key: true
+  t.references :applicant, null: false, foreign_key: true
   t.integer :application_status, null: false
 end
 
 create_table :deal do |t|
   t.references :offer, null: false, foreign_key: true
-  t.references :offerer_id, null: false, foreign_key: true
-  t.references :acceptor_id, null: false, foreign_key: true
+  t.references :offerer, null: false, foreign_key: true
+  t.references :applicant, null: false, foreign_key: true
   t.datetime :work_date, null: false
   t.integer :deal_status, null: false
 end
