@@ -13,16 +13,15 @@ controllers/
     ├── sessions_controller.rb [new, create, destroy]    ---04
     ├── users_controller.rb [top, show, edit, update, quit, deactive, offers, applications, deals, favorites, followers, reviews]    ---05
     ├── relations_controller.rb [create, destroy]    ---06
-    ├── applicants_controller.rb [create, destroy]    ---07
-    ├── locations_controller.rb [index, create, edit, update, destroy]    ---08
-    ├── offers_controller.rb [new, create, show, edit, update, index]    ---09
-    |── favorites_controller.rb [create, destroy]    ---10
-    |── comments_controller.rb [create, destroy, edit, update]    ---11
-    |── applications_controller.rb [new, create, thanx, show, destroy, edit, update, index]    ---12
-    ├── deals_controller.rb [new, create, show, edit, update, index]    ---13
-    ├── chattings_controller.rb [create, destroy]    ---14
-    ├── reviews_controller.rb [new, create, show, edit, update]    ---15
-    └── notificatons_controller.rb [index]    ---16
+    ├── locations_controller.rb [index, create, edit, update, destroy]    ---07
+    ├── offers_controller.rb [new, create, show, edit, update, index]    ---08
+    |── favorites_controller.rb [create, destroy]    ---09
+    |── comments_controller.rb [create, destroy, edit, update]    ---10
+    |── applications_controller.rb [new, create, thanx, show, destroy, edit, update, index]    ---11
+    ├── deals_controller.rb [new, create, show, edit, update, index]    ---12
+    ├── chattings_controller.rb [create, destroy]    ---13
+    ├── reviews_controller.rb [new, create, show, edit, update]    ---14
+    └── notificatons_controller.rb [index]    ---15
 
 ================================================================================================================================
 01
@@ -176,28 +175,9 @@ end
 06
 ================================================================================================================================
 07
-class ApplicantsController < ApplicationController
 
-  def create
-    @applicant = @current_user.applicants.new(job_id: params[:job_id])
-    if @applicant.save
-      flash[:success] = "応募しました"
-    end
-  end
-
-  def destroy
-    @applicant = Applicant.find_by(user_id: @current_user.id, job_id: params[:job_id])
-    if @applicant.destroy
-      flash[:success] = "応募解除しました"
-    end
-  end
-
-end
 ================================================================================================================================
 08
-
-================================================================================================================================
-09
 class Public::OffersController < ApplicationController
   before_action :set_offer, only: [:edit, :update, :close, select_applicant]
   def new
@@ -257,12 +237,12 @@ class Public::OffersController < ApplicationController
   end
 end
 ================================================================================================================================
+09
+
+================================================================================================================================
 10
 ================================================================================================================================
 11
-
-================================================================================================================================
-12
 class ApplicationsController < ApplicationController
   before_action :authenticate_user!
 
@@ -283,13 +263,16 @@ class ApplicationsController < ApplicationController
   end
 end
 ================================================================================================================================
+12
+
+================================================================================================================================
 13
 ================================================================================================================================
 14
 ================================================================================================================================
 15
 ================================================================================================================================
-16
+***
 
 ================================================================================================================================
 A01
