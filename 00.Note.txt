@@ -1,3 +1,20 @@
+240215-01
+
+gem 'CanCanCan'
+
+
+class Ability
+  include CanCanCan::Ability
+
+  def initialize(user)
+    # 依頼ユーザーは、自分が依頼した応募と取引を編集できる
+    can :edit, Application, offer: { user_id: user.id }
+    can :edit, Deal, application: { request: { user_id: user.id } }
+  end
+end
+
+
+
 240215-00
 要件定義
 
