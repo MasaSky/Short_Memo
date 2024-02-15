@@ -21,6 +21,7 @@
     resources :offers, only: [:new, :create, :show, :edit, :update, :index] do
       resource :favorites, only: [:create, :destroy]
       resources :comments, only: [:create, :destroy, :edit, :update]
+      resource :applicants, only: [:create, :destroy]
       resources :applications, only: [:new, :create, :show, :edit, :update, :index] do
         collection do
           get 'thanx' => 'applications#thanx'
