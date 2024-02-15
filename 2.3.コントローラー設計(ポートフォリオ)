@@ -176,6 +176,23 @@ end
 06
 ================================================================================================================================
 07
+class ApplicantsController < ApplicationController
+
+  def create
+    @applicant = @current_user.applicants.new(job_id: params[:job_id])
+    if @applicant.save
+      flash[:success] = "応募しました"
+    end
+  end
+
+  def destroy
+    @applicant = Applicant.find_by(user_id: @current_user.id, job_id: params[:job_id])
+    if @applicant.destroy
+      flash[:success] = "応募解除しました"
+    end
+  end
+
+end
 ================================================================================================================================
 08
 
