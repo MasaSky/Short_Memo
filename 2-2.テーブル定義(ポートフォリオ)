@@ -71,7 +71,7 @@ end
 create_table :review do |t|
   t.references :deal, null: false, foreign_key: true
   t.references :user, null: false, foreign_key: true
-  t.references :applicant_id, null: false, foreign_key: true
+  t.references :applicant, null: false, foreign_key: true
   t.text :review, null: false
   t.float :all_rating, null: false, default: 0
   t.float :rating1, null: false, default: 0
