@@ -22,7 +22,6 @@ end
 
 create_table :offer do |t|
   t.references :user, null: false, foreign_key: true
-  t.references :offerer, null: false, foreign_key: true
   t.string :title, null: false
   t.text :description, null: false
   t.datetime :work_date, null: false
@@ -46,15 +45,18 @@ create_table :comment do |t|
 end
 
 create_table :application do |t|
+  t.references :user, null: false, foreign_key: true
   t.references :offer, null: false, foreign_key: true
-  t.references :offerer, null: false, foreign_key: true
   t.references :applicant, null: false, foreign_key: true
+  t.text :appeal, null: false
   t.integer :application_status, null: false
+  t.boolean :is_deleted, null: false, default: false
 end
 
 create_table :deal do |t|
   t.references :offer, null: false, foreign_key: true
-  t.references :offerer, null: false, foreign_key: true
+  t.references :user, null: false, foreign_key: true
+  t.references :application, null: false, foreign_key: true
   t.references :applicant, null: false, foreign_key: true
   t.datetime :work_date, null: false
   t.integer :deal_status, null: false
