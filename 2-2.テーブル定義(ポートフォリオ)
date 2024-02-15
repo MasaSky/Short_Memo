@@ -16,8 +16,8 @@ end
 create_table :location do |t|
   t.integer :user_id, null: false
   t.string :address, null: false
-  t.integer :latitude, null: false
-  t.integer :longitude, null: false
+  t.float :latitude, null: false
+  t.float :longitude, null: false
 end
 
 create_table :offer do |t|
@@ -68,10 +68,10 @@ create_table :chatting do |t|
   t.text :chat, null: false
 end
 
-create_table :chatting do |t|
+create_table :review do |t|
   t.references :deal, null: false, foreign_key: true
-  t.references :offerer_id, null: false, foreign_key: true
-  t.references :acceptor_id, null: false, foreign_key: true
+  t.references :user, null: false, foreign_key: true
+  t.references :applicant_id, null: false, foreign_key: true
   t.text :review, null: false
   t.float :all_rating, null: false, default: 0
   t.float :rating1, null: false, default: 0
@@ -89,7 +89,7 @@ create_table :notification do |t|
   t.integer :visitor_id, null: false, foreign_key: true
   t.integer :visited_id, null: false, foreign_key: true
   t.integer :action_type, null: false
-  t.boolean :cheched, null: false, default: false
+  t.boolean :checked, null: false, default: false
 end
 
 ================================================================================================================================
