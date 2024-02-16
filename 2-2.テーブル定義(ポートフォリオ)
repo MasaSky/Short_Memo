@@ -11,7 +11,40 @@ create_table :user do |t|
   t.text :introduction
   t.boolean :is_active, null: false, default: true
 end
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+has_many :relationships, dependent: :destroy
+has_many :followings, through: :relationships, source: :followed
+has_many :followers, through: :reverse_of_relationships, source: :follower
+has_many :applicants, through: :applications, source: :applicant
+has_many :offerers, through: :deals, source: :offerer
+has_many :acceptors, through: :deals, source: :acceptor
+has_many :offerers, through: :reviews, source: :offerer
+has_many :acceptors, through: :reviews, source: :acceptor
+has_many :visitors, class_name: "Notifications", foreign_key: :visitor_id
+has_many :visiteds, class_name: "Notifications", foreign_key: :visited_id
+has_many :offers
+has_many :deals
+has_many :locations, dependent: :destroy
+has_many :favorites, dependent: :destroy
+has_many :comments
+has_many :chattings
+has_many :notifications, dependent: :destroy
 
+def follow(user_id)
+  relationships.create(followed_id: user_id)
+end
+
+def unfollow(user_id)
+  relationships.find_by(followed_id: user_id).destroy
+end
+
+def following?(user)
+  followings.include?(user)
+end
+
+scope :newuser_today, -> { where(created_at: Time.current.at_beginning_of_day..Time.current.at_end_of_day) }
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 create_table :relationship do |t|
   t.references :follower, null: false, foreign_key: { to_table: :users }
   t.references :followed, null: false, foreign_key: { to_table: :users }
