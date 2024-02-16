@@ -7,8 +7,7 @@ end
 
 create_table :user do |t|
   t.string :username, null: false, unique: true
-  t.string :last_name, null: false
-  t.string :first_name, null: false
+  t.string :nickname, null: false
   t.text :introduction
   t.boolean :is_active, null: false, default: true
 end
