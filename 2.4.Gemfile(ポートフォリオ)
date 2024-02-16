@@ -1,0 +1,19 @@
+gem 'devise'
+gem 'devise-i18n'
+gem 'bootstrap', '~> 5.3.0'
+gem 'jquery-rails'
+gem 'refile-mini_magick'
+gem 'kaminari','~> 1.2.1'
+gem 'rails-i18n'
+gem 'enum_help'
+gem 'ransack'
+
+gem 'simple_calendar', '~> 2.0'
+
+gem 'google-maps-service'
+gem 'geocoder'
+
+gem 'dotenv-rails'
+
+gem 'bullet'
+gem 'faker'
