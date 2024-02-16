@@ -12,6 +12,11 @@ create_table :user do |t|
   t.boolean :is_active, null: false, default: true
 end
 
+create_table :relationship do |t|
+  t.integer :follower_id, null: false, foreign_key: true
+  t.integer :followed_id, null: false, foreign_key: true
+end
+
 create_table :location do |t|
   t.integer :user_id, null: false
   t.string :address, null: false
@@ -77,11 +82,6 @@ create_table :review do |t|
   t.float :rating2, null: false, default: 0
   t.float :rating3, null: false, default: 0
   t.float :rating4, null: false, default: 0
-end
-
-create_table :relationship do |t|
-  t.integer :follower_id, null: false, foreign_key: true
-  t.integer :followed_id, null: false, foreign_key: true
 end
 
 create_table :notification do |t|
