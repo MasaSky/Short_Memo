@@ -73,6 +73,87 @@ Rails.application.routes.draw do
 end
 
 
+class Group < ApplicationRecord
+  has_many :group_users
+  has_many :users, through: :group_users
+end
+
+class User < ApplicationRecord
+  has_many :group_users
+  has_many :groups, through: :group_users
+end
+
+class Candidate < ApplicationRecord
+  # 候補者の属性
+end
+
+
+class GroupsController < ApplicationController
+  before_action :authenticate_user!
+
+  def new
+    @group = Group.new
+    @candidates = Candidate.all
+  end
+
+  def create
+    @group = Group.new(group_params)
+    @candidates = Candidate.all
+
+    if @group.save
+      # 選択された候補者を取得
+      selected_candidates = params[:candidates]
+
+      # グループに候補者を追加
+      selected_candidates.each do |candidate_id|
+        @group.users << User.find(candidate_id)
+      end
+
+      redirect_to groups_path, notice: "グループを作成しました。"
+    else
+      render :new
+    end
+  end
+
+  private
+
+  def group_params
+    params.require(:group).permit(:name, :description, :public)
+  end
+end
+
+
+<%= form_for @group do |f| %>
+  <div class="form-group">
+    <%= f.label :name %>
+    <%= f.text_field :name, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :description %>
+    <%= f.text_area :description, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :public %>
+    <%= f.check_box :public %>
+  </div>
+
+  <h3>候補者リスト</h3>
+  <ul>
+    <% @candidates.each do |candidate| %>
+      <li>
+        <%= f.check_box :candidates, candidate.id %>
+        <%= candidate.name %>
+      </li>
+    <% end %>
+  </ul>
+
+  <%= f.submit "グループを作成", class: "btn btn-primary" %>
+<% end %>
+
+
+
 
 
 240215-01
