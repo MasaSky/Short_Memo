@@ -1,3 +1,80 @@
+240217-00
+
+
+dealsをグループに見立てて作成し、選抜した応募者をグループ化して成立させる。
+
+class Deal < ApplicationRecord
+  has_many :group_users
+  has_many :users, through: :group_users
+end
+
+class User < ApplicationRecord
+  has_many :group_users
+  has_many :deals, through: :group_users
+end
+
+class GroupUser < ApplicationRecord
+  belongs_to :deal
+  belongs_to :user
+end
+
+
+
+class DealsController < ApplicationController
+  before_action :authenticate_user!
+
+  def index
+    @groups = Deal.all
+  end
+
+  def new
+    @group = Deal.new
+  end
+
+  def create
+    @group = Deal.new(deal_params)
+    if @group.save
+      redirect_to deals_path, notice: "仕事グループを作成しました"
+    else
+      render :new
+    end
+  end
+
+  private
+
+  def deal_params
+    params.require(:deal).permit(:name, :description, :public)
+  end
+end
+
+class GroupUsersController < ApplicationController
+  before_action :authenticate_user!
+
+  def create
+    @group = Deal.find(params[:deal_id])
+    @group_user = GroupUser.new(user_id: current_user.id, group_id: @group.id)
+    if @group_user.save
+      redirect_to deal_path(@deal), notice: "仕事グループに加入しました"
+    else
+      redirect_to groups_path, alert: "仕事グループに加入できませんでした"
+    end
+  end
+
+  def destroy
+    @group = Deal.find(params[:deal_id])
+    @group_user = GroupUser.find_by(user
+
+
+
+Rails.application.routes.draw do
+  resources :deals do
+    resources :users, only: [:index, :create, :destroy]
+  end
+end
+
+
+
+
 240215-01
 
 gem 'CanCanCan'
