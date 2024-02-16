@@ -12,6 +12,9 @@ create_table :user do |t|
   t.boolean :is_active, null: false, default: true
 end
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+validates :username uniqueness: true
+validates :email, uniqueness: true
+
 has_one_attached :profile_image
 has_many :relationships, dependent: :destroy
 has_many :followings, through: :relationships, source: :followed
