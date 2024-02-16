@@ -13,8 +13,8 @@ create_table :user do |t|
 end
 
 create_table :relationship do |t|
-  t.integer :follower_id, null: false, foreign_key: true
-  t.integer :followed_id, null: false, foreign_key: true
+  t.references :follower, null: false, foreign_key: { to_table: :users }
+  t.references :followed, null: false, foreign_key: { to_table: :users }
 end
 
 create_table :location do |t|
@@ -51,7 +51,7 @@ end
 create_table :application do |t|
   t.references :user, null: false, foreign_key: true
   t.references :offer, null: false, foreign_key: true
-  t.references :applicant, null: false, foreign_key: true
+  t.references :applicant, null: false, foreign_key: { to_table: :users }
   t.text :appeal, null: false
   t.integer :application_status, null: false
   t.boolean :is_deleted, null: false, default: false
@@ -61,7 +61,7 @@ create_table :deal do |t|
   t.references :offer, null: false, foreign_key: true
   t.references :user, null: false, foreign_key: true
   t.references :application, null: false, foreign_key: true
-  t.references :applicant, null: false, foreign_key: true
+  t.references :applicant, null: false, foreign_key: { to_table: :users }
   t.datetime :work_date, null: false
   t.integer :deal_status, null: false
 end
@@ -75,7 +75,7 @@ end
 create_table :review do |t|
   t.references :deal, null: false, foreign_key: true
   t.references :user, null: false, foreign_key: true
-  t.references :applicant, null: false, foreign_key: true
+  t.references :applicant, null: false, foreign_key: { to_table: :users }
   t.text :review, null: false
   t.float :all_rating, null: false, default: 0
   t.float :rating1, null: false, default: 0
