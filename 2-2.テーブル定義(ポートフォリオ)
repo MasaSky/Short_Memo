@@ -48,6 +48,17 @@ end
 
 scope :newuser_today, -> { where(created_at: Time.current.at_beginning_of_day..Time.current.at_end_of_day) }
 
+def create_notification_follow!(current_user)
+    temp = Notification.where(["visitor_id = ? and visited_id = ? and action = ? ", current_user.id, id, 'follow'])
+    if temp.blank?
+      notification = current_user.active_notifications.new(
+        visited_id: id,
+        action: 'follow'
+      )
+      notification.save if notification.valid?
+    end
+end
+
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 create_table :relationship do |t|
   t.references :follower, null: false, foreign_key: { to_table: :users }
