@@ -24,6 +24,55 @@ gem 'geocoder'
 
 
 
+# アドレスモデル
+class Address < ApplicationRecord
+  # 住所
+  attribute :address
+  # 緯度
+  attribute :latitude
+  # 経度
+  attribute :longitude
+end
+
+# コントローラー
+class AddressesController < ApplicationController
+  # 住所一覧
+  def index
+    @addresses = Address.all
+  end
+
+  # 地図表示
+  def show
+    @address = Address.find(params[:id])
+
+    # 地図の初期化
+    @map = Gmaps4rails.build_markers(@address) do |marker, address|
+      marker.lat address.latitude
+      marker.lng address.longitude
+      marker.infowindow address.address
+    end
+  end
+end
+
+# ビュー
+# 住所一覧
+index.html.erb
+
+
+
+
+<%= link_to "地図表示", address_path(address) %>
+
+
+<%= gmaps4rails(@map) %>
+
+ユーザーはindex.html.erbで住所一覧を表示します。
+ユーザーは地図表示したい住所のリンクをクリックします。
+AddressesController#showアクションが実行されます。
+Addressモデルから選択された住所を取得します。
+Gmaps4railsを使用して、地図とマーカーを生成します。
+show.html.erbで地図を表示します。
+
 
 
 240217-00
