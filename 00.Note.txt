@@ -1,3 +1,186 @@
+240218-01
+
+
+# app/models/job.rb
+class Job < ApplicationRecord
+  belongs_to :user # 投稿者
+  has_many :applications, dependent: :destroy # 応募
+  validates :title, presence: true # タイトルは必須
+  validates :content, presence: true # 内容は必須
+  enum status: { open: 0, closed: 1 } # 募集中か終了か
+end
+
+# app/models/application.rb
+class Application < ApplicationRecord
+  belongs_to :job # 応募先
+  belongs_to :user # 応募者
+  validates :message, presence: true # 応募メッセージは必須
+  validates :user_id, uniqueness: { scope: :job_id } # 一つの仕事依頼に対して、一人のユーザーは一回しか応募できない
+  validates :accepted, inclusion: { in: [true, false] } # 採用されたかどうかは真偽値である
+end
+
+
+# app/controllers/jobs_controller.rb
+class JobsController < ApplicationController
+  before_action :authenticate_user!, except: [:index, :show] # ログインしていないときは、一覧表示と詳細表示以外はできない
+  before_action :set_job, only: [:show, :edit, :update, :destroy, :accept] # 共通の処理をまとめる
+  before_action :check_user, only: [:edit, :update, :destroy, :accept] # 投稿者以外は編集、削除、採用決定できない
+
+  # 仕事依頼の一覧表示
+  def index
+    @jobs = Job.all.order(created_at: :desc) # 新しい順に表示
+  end
+
+  # 仕事依頼の詳細表示
+  def show
+    @application = current_user.applications.find_by(job_id: @job.id) if user_signed_in? # ログインしている場合、自分の応募があるか確認
+  end
+
+  # 仕事依頼の新規作成画面
+  def new
+    @job = current_user.jobs.build # 空のインスタンスを作成
+  end
+
+  # 仕事依頼の新規作成処理
+  def create
+    @job = current_user.jobs.build(job_params) # ストロングパラメーターを使う
+    if @job.save # 保存に成功したら
+      redirect_to @job, notice: "仕事依頼を作成しました。" # 詳細画面に遷移してメッセージを表示
+    else # 保存に失敗したら
+      render :new # 新規作成画面を再表示
+    end
+  end
+
+  # 仕事依頼の編集画面
+  def edit
+  end
+
+  # 仕事依頼の更新処理
+  def update
+    if @job.update(job_params) # 更新に成功したら
+      redirect_to @job, notice: "仕事依頼を更新しました。" # 詳細画面に遷移してメッセージを表示
+    else # 更新に失敗したら
+      render :edit # 編集画面を再表示
+    end
+  end
+
+  # 仕事依頼の削除処理
+  def destroy
+    @job.destroy # 削除する
+    redirect_to jobs_url, notice: "仕事依頼を削除しました。" # 一覧画面に遷移してメッセージを表示
+  end
+
+  # 仕事依頼の採用決定処理
+  def accept
+    @application = @job.applications.find(params[:application_id]) # 採用する応募を探す
+    @application.update(accepted: true) # 採用されたことを記録する
+    @job.update(status: :closed) # 仕事依頼を終了する
+    redirect_to @job, notice: "応募者を採用しました。" # 詳細画面に遷移してメッセージを表示
+  end
+
+  private
+
+  # 共通の処理をまとめる
+  def set_job
+    @job = Job.find(params[:id]) # 仕事依頼を探す
+  end
+
+  # ストロングパラメーターを定義する
+  def job_params
+    params.require(:job).permit(:title, :content) # 必要なパラメーターを許可する
+  end
+
+  # 投稿者以外は編集、削除、採用決定できない
+  def check_user
+    unless @job.user == current_user # 投稿者でない場合
+      redirect_to root_url, alert: "権限がありません。" # トップページに遷移してメッセージを表示
+    end
+  end
+end
+
+# app/controllers/applications_controller.rb
+class ApplicationsController < ApplicationController
+  before_action :authenticate_user! # ログインしていないときはできない
+  before_action :set_job, only: [:create, :destroy] # 共通の処理をまとめる
+  before_action :check_user, only: [:destroy] # 応募者以外は削除できない
+
+  # 応募の新規作成処理
+  def create
+    @application = @job.applications.build(application_params) # ストロングパラメーターを使う
+    @application.user = current_user # 応募者を設定する
+
+
+# app/controllers/groups_controller.rb
+class GroupsController < ApplicationController
+  before_action :authenticate_user!, except: [:show] # ログインしていないときは、詳細表示以外はできない
+  before_action :set_job, only: [:create] # 共通の処理をまとめる
+  before_action :set_group, only: [:show, :destroy] # 共通の処理をまとめる
+  before_action :check_user, only: [:destroy] # 投稿者以外は削除できない
+
+  # 仕事グループの新規作成処理
+  def create
+    @group = @job.build_group(group_params) # ストロングパラメーターを使う
+    if @group.save # 保存に成功したら
+      params[:user_ids].each do |user_id| # 選択された応募者のIDを取得する
+        @group.group_users.create(user_id: user_id) # 仕事グループと応募者の関連を作成する
+      end
+      @job.update(status: :closed) # 仕事依頼を終了する
+      redirect_to @group, notice: "仕事グループを作成しました。" # 詳細画面に遷移してメッセージを表示
+    else # 保存に失敗したら
+      redirect_to @job, alert: "仕事グループの作成に失敗しました。" # 仕事依頼の詳細画面に遷移してメッセージを表示
+    end
+  end
+
+  # 仕事グループの詳細表示
+  def show
+  end
+
+  # 仕事グループの削除処理
+  def destroy
+    @group.destroy # 削除する
+    redirect_to @group.job, notice: "仕事グループを削除しました。" # 仕事依頼の詳細画面に遷移してメッセージを表示
+  end
+
+  private
+
+  # 共通の処理をまとめる
+  def set_job
+    @job = Job.find(params[:job_id]) # 仕事依頼を探す
+  end
+
+  # 共通の処理をまとめる
+  def set_group
+    @group = Group.find(params[:id]) # 仕事グループを探す
+  end
+
+  # ストロングパラメーターを定義する
+  def group_params
+    params.require(:group).permit(:name) # 必要なパラメーターを許可する
+  end
+
+  # 投稿者以外は削除できない
+  def check_user
+    unless @group.job.user == current_user # 投稿者でない場合
+      redirect_to root_url, alert: "権限がありません。" # トップページに遷移してメッセージを表示
+    end
+  end
+end
+
+
+# config/routes.rb
+Rails.application.routes.draw do
+  # 省略
+  resources :jobs do # 仕事依頼のリソース
+    member do
+      post :accept # 仕事依頼の採用決定
+    end
+    resource :group, only: [:create, :show, :destroy] # 仕事グループのリソース（仕事依頼にネスト）
+  end
+  # 省略
+end
+
+
+
 240218-00
 
 
