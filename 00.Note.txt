@@ -1,3 +1,31 @@
+240218-00
+
+
+gem 'googlemaps'
+
+<%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{ENV['GOOGLE_API_KEY']}" %>
+
+
+
+<%= google_map(latitude: 35.652832, longitude: 139.839478) %>
+
+
+<%= google_map(latitude: 35.652832, longitude: 139.839478) do |map| %>
+  <%= map.marker(latitude: 35.652832, longitude: 139.839478) %>
+<% end %>
+
+
+gem 'geocoder'
+
+
+<%= google_map(address: "東京都渋谷区") do |map| %>
+  <%= map.marker(latitude: map.geocode("東京都渋谷区").latitude, longitude: map.geocode("東京都渋谷区").longitude) %>
+<% end %>
+
+
+
+
+
 240217-00
 
 
