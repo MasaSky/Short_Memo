@@ -16,6 +16,7 @@ validates :username uniqueness: true
 validates :email, uniqueness: true
 
 has_one_attached :profile_image
+has_many :locations, dependent: :destroy
 #---follow
 has_many :relationships, dependent: :destroy
 has_many :followings, through: :relationships, source: :followed
@@ -30,12 +31,11 @@ has_many :visiteds, class_name: "Notifications", foreign_key: :visited_id
 has_many :offers
 has_many :applications
 has_many :deals
-has_many :locations, dependent: :destroy
 has_many :favorites, dependent: :destroy
 has_many :comments
 has_many :chattings
 
-
+#---followship
 def follow(user_id)
   relationships.create(followed_id: user_id)
 end
@@ -48,8 +48,7 @@ def following?(user)
   followings.include?(user)
 end
 
-scope :newuser_today, -> { where(created_at: Time.current.at_beginning_of_day..Time.current.at_end_of_day) }
-
+#---make_notification
 def create_notification_follow!(current_user)
     temp = Notification.where(["visitor_id = ? and visited_id = ? and action = ? ", current_user.id, id, 'follow'])
     if temp.blank?
@@ -60,6 +59,9 @@ def create_notification_follow!(current_user)
       notification.save if notification.valid?
     end
 end
+
+#---Daily_count_for_new_users
+scope :newuser_today, -> { where(created_at: Time.current.at_beginning_of_day..Time.current.at_end_of_day) }
 
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 create_table :relationship do |t|
