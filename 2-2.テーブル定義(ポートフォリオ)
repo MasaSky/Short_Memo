@@ -60,7 +60,7 @@ def create_notification_follow!(current_user)
     end
 end
 
-#---Daily_count_for_new_users
+#---daily_count_for_new_users
 scope :newuser_today, -> { where(created_at: Time.current.at_beginning_of_day..Time.current.at_end_of_day) }
 
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -96,14 +96,13 @@ create_table :offer do |t|
   t.boolean :is_deleted, null: false, default: false
 end
 
-has_one_attached : offer_image
+has_one_attached :offer_image
 belongs_to :user
 has_many :users, through: :favorites
 has_many :favorites, dependent: :destroy
 has_many :comments, dependent: :destroy
 has_many :applications
 has_many :applicants, through: :applications, dependent: :destroy
-has_one :deal
 has_many :notifications
 scope :offered_today, -> { where(created_at: Time.current.at_beginning_of_day..Time.current.at_end_of_day) }
 
