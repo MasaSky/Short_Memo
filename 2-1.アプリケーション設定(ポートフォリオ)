@@ -16,31 +16,13 @@
   scope module: :public do
     root to: 'homes#top'
     get 'homes/about', to: 'homes#about', as: :about
-    resources :notifications, only: [:index]
-    #---offers
-    resources :offers, only: [:new, :create, :show, :edit, :update, :index] do
-      resource :favorites, only: [:create, :destroy]
-      resources :comments, only: [:create, :destroy, :edit, :update]
-      resource :applicants, only: [:create, :destroy]
-      resources :applications, only: [:new, :create, :show, :edit, :update, :index] do
-        collection do
-          get 'thanx' => 'applications#thanx'
-          post 'select_applicant' => 'applications#select_applicant'
-        end
-      end
-    end
-    #---deals
-    resources :deals, only: [:new, :create, :show, :edit, :update, :index] do
-      resource :chattings, only: [:create, :destroy]
-      resources :reviews, only: [:new, :create, :show, :edit, :update]
-    end
     #---users
-    resources :users do
+    resources :users, only: [:top] do
       collection do
         get 'info' => 'users#info'
         get 'info/edit' => 'users#edit'
-        patch 'update' => 'users#update'
-        get 'quit' => 'users#quit'
+        patch 'info/update' => 'users#update'
+        get 'info/quit' => 'users#quit'
         patch 'deactive' => 'users#deactive'
         get 'offers' => 'users#offers'
         get 'applications' => 'users#applications'
@@ -49,8 +31,24 @@
         get 'followers' => 'users#followers'
         get 'reviews' => 'users#reviews'
       end
-      resource :relationships, only: [:create, :destroy]
       resources :locations, only: [:index, :create, :edit, :update, :destroy]
+      resource :relationships, only: [:create, :destroy]
     end
+    #---offers
+    resources :offers, only: [:new, :create, :show, :edit, :update, :index] do
+      resource :favorites, only: [:create, :destroy]
+      resources :comments, only: [:create, :destroy, :edit, :update]
+      resources :applications, only: [:new, :create, :show, :edit, :update, :destroy] do
+        collection do
+          get 'thanx' => 'applications#thanx'
+        end
+      end
+    end
+    #---deals
+    resources :deals, only: [:new, :create, :show, :edit, :update] do
+      resource :chattings, only: [:create, :update]
+      resources :reviews, only: [:new, :create, :show, :edit, :update]
+    end
+    resources :notifications, only: [:index]
   end
   ================================================================================================================================
