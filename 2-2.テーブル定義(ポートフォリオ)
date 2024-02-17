@@ -16,23 +16,25 @@ validates :username uniqueness: true
 validates :email, uniqueness: true
 
 has_one_attached :profile_image
+#---follow
 has_many :relationships, dependent: :destroy
 has_many :followings, through: :relationships, source: :followed
 has_many :followers, through: :reverse_of_relationships, source: :follower
+#---application
 has_many :applicants, through: :applications, source: :applicant
-has_many :offerers, through: :deals, source: :offerer
-has_many :acceptors, through: :deals, source: :acceptor
-has_many :offerers, through: :reviews, source: :offerer
-has_many :acceptors, through: :reviews, source: :acceptor
+#---notification
+has_many :notifications, dependent: :destroy
 has_many :visitors, class_name: "Notifications", foreign_key: :visitor_id
 has_many :visiteds, class_name: "Notifications", foreign_key: :visited_id
+#---users_affaires
 has_many :offers
+has_many :applications
 has_many :deals
 has_many :locations, dependent: :destroy
 has_many :favorites, dependent: :destroy
 has_many :comments
 has_many :chattings
-has_many :notifications, dependent: :destroy
+
 
 def follow(user_id)
   relationships.create(followed_id: user_id)
