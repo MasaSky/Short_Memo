@@ -12,8 +12,8 @@ controllers/
     ├── registrations_controller.rb [new, create]    ---03
     ├── sessions_controller.rb [new, create, destroy]    ---04
     ├── users_controller.rb [top, show, edit, update, quit, deactive, offers, applications, deals, favorites, followers, reviews]    ---05
-    ├── relations_controller.rb [create, destroy]    ---06
-    ├── locations_controller.rb [index, create, edit, update, destroy]    ---07
+    ├── locations_controller.rb [index, create, edit, update, destroy]    ---06
+    ├── relations_controller.rb [create, destroy]    ---07
     ├── offers_controller.rb [new, create, show, edit, update, index]    ---08
     |── favorites_controller.rb [create, destroy]    ---09
     |── comments_controller.rb [create, destroy, edit, update]    ---10
@@ -298,6 +298,39 @@ class ApplicationsController < ApplicationController
 end
 ================================================================================================================================
 12
+class Public::DealsController < ApplicationController
+
+  def new
+    @deal_group = Deal.new
+    @applicants = Applicant.all
+  end
+
+  def create
+    @deal_group = Deal.new(deal_params)
+    @applicants = Applicant.all
+
+    if @deal_group.save
+      # 選択された候補者を取得
+      selected_applicants = params[:applicants]
+
+      # グループに候補者を追加
+      selected_applicants.each do |applicant_id|
+        @deal_group.users << User.find(applicant_id)
+      end
+
+      redirect_to deals_path, notice: "仕事依頼グループを作成しました"
+    else
+      render :new
+    end
+  end
+
+  private
+
+  def deal_params
+    params.require(:deal).permit(:title, :description)
+  end
+end
+
 
 ================================================================================================================================
 13
