@@ -64,6 +64,7 @@ c-3)app/javascript
 +++ stylesheets/application.scss
 +++ @use '~bootstrap/scss/bootstrap';
 
+
 c-4)app/javascript/packs/application.js
 +++
 import "jquery";
@@ -74,6 +75,59 @@ import "../stylesheets/application";
 c-5)app/views/layouts/application.html.erb
 <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
 => <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+1.Gem導入
+Gemgileに以下２つのgemを追加
+
+Gemfile
+gem 'bootstrap', '~> 5.3.0'
+gem 'jquery-rails'
+
+gem "sassc-rails" #コメントアウトをなくす
+ターミナルにて、インストール
+
+terminal
+bundle install
+2.CSS編集
+app\assets\stylesheets\application.cssを".scss"に変更
+中身を全て消して以下のコードに変更
+
+application.scss
+@import "bootstrap";
+3.javascriptの設定
+a) Configファイルの編集
+config\importmap.rb
+以下のコードを追記(位置はどこでも良い）
+
+importmap.rb
+pin "bootstrap", to: "bootstrap.min.js", preload: true
+pin "@popperjs/core", to: "popper.js", preload: true
+※バージョンによっては、"bootstap.min.js"ではなく、"bootsrap.js"と書く
+
+b) assets.rbファイルの編集
+config\initializers\assets.rb
+以下のコードを追記(位置はどこでも良い）
+
+assets.rb
+Rails.application.config.assets.precompile += %w(bootstrap.min.js popper.js)
+
+# a)で"bootstap.min.js"ではなく、"bootsrap.js"と書いた場合は、こちらも同じに直す
+c) application.jsファイルの編集
+app\javascript\application.jsに以下のコードを追記（import "@hotwired/turbo-rails"の上に書く）
+
+application.js
+//= require jquery3
+//= require popper
+//= require bootstrap
+バージョンによっては以下のコードにする
+
+application.js
+//= require jquery3
+//= require popper
+//= require bootstrap
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 
 〇Font Awesome
 
