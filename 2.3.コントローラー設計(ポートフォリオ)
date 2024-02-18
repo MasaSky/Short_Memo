@@ -74,7 +74,7 @@ class Public::RegistrationsController < Devise::RegistrationsController
   protected
 
   def configure_sign_up_params
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:username, :last_name, :first_name, :introduction])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:nickname, :introduction])
   end
 end
 ================================================================================================================================
@@ -91,7 +91,7 @@ class Public::SessionsController < Devise::SessionsController
   end
 
   def reject_user
-    @user = User.find_by(email: params[:customer][:email])
+    @user = User.find_by(email: params[:user][:email])
     if @user
       if @user.valid_password?(params[:user][:password]) && !@customer.is_active
         flash[:notice] = "退会済みです。再度ご登録をしてご利用ください"
