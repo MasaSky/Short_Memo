@@ -193,8 +193,8 @@ scope :reviewed_today, -> { where(created_at: Time.current.at_beginning_of_day..
 
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 create_table :notification do |t|
-  t.integer :visitor_id, null: false, foreign_key: true
-  t.integer :visited_id, null: false, foreign_key: true
+  t.references :visitor, null: false, foreign_key: true
+  t.references :visited, null: false, foreign_key: true
   t.integer :action_type, null: false
   t.boolean :checked, null: false, default: false
 end
