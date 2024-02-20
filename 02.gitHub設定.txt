@@ -46,6 +46,17 @@ Already up-to-date.
 
 ●git@github.com: Permission denied (publickey).
 
+●マージ(merge): ローカルブランチとリモートブランチをマージポイントで結合します。
+git config pull.rebase false
+git pull origin main
+
+●リベース(rebase): ローカルブランチをベースにしてリモートブランチ上にコミットを再配置します。
+git config pull.rebase true
+git pull origin main
+
+●ファストフォワード(fast-forward): リモートブランチにだけ新しいコミットがあれば、直接ローカルブランチをリモートブランチに移動します。
+git config pull.ff only
+git pull origin main
 
 ●初回登録
 $ git init                                       # 現在いるディレクトリをgitで管理するための設定ファイルを生成する。
