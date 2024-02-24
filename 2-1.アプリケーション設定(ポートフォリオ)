@@ -41,6 +41,9 @@ Rails.application.routes.draw do
     end
     #---deals
     resources :deals, only: [:new, :create, :show, :edit, :update] do
+      member do
+        get 'permit' => 'deals#permit', as: 'permits'
+      end
       resource :applications, only: [:create, :destroy]
       resource :deal_users, only: [:create, :destroy]
       resource :chattings, only: [:create, :update]
@@ -105,6 +108,7 @@ end
                                    offer GET    /offers/:id(.:format)                                                                             public/offers#show
                                          PATCH  /offers/:id(.:format)                                                                             public/offers#update
                                          PUT    /offers/:id(.:format)                                                                             public/offers#update
+                            permits_deal GET    /deals/:id/permit(.:format)                                                                       public/deals#permit
                        deal_applications DELETE /deals/:deal_id/applications(.:format)                                                            public/applications#destroy
                                          POST   /deals/:deal_id/applications(.:format)                                                            public/applications#create
                          deal_deal_users DELETE /deals/:deal_id/deal_users(.:format)                                                              public/deal_users#destroy
