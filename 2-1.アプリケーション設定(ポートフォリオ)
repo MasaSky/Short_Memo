@@ -1,23 +1,20 @@
 
 ================================================================================================================================
+Rails.application.routes.draw do
   devise_for :users,skip: [:passwords], controllers: {registrations: 'public/registrations', sessions: 'public/sessions'}
   devise_for :admin, skip: [:registrations, :password], controllers: {sessions: 'admin/sessions'}
 
   namespace :admin do
     get 'admin' => 'homes#top'
-    resources :offers, only: [:index, :show, :destroy] do
-      collection do
-        delete 'destroy_comment' => 'offers#destroy_comment'
-      end
-    end
+    resources :offers, only: [:index, :show, :destroy] 
     resources :users, only: [:index, :show, :edit, :update]
   end
 
   scope module: :public do
     root to: 'homes#top'
-    get 'homes/about', to: 'homes#about', as: :about
+    get 'about', to: 'homes#about', as: :about
     #---users
-    resources :users, only: [:top] do
+    resources :users, only: [:show] do
       collection do
         get 'info' => 'users#info'
         get 'info/edit' => 'users#edit'
@@ -31,21 +28,27 @@
         get 'followers' => 'users#followers'
         get 'reviews' => 'users#reviews'
       end
-      resources :locations, only: [:index, :create, :edit, :update, :destroy]
+      resources :locations, only: [:index, :create, :edit, :update, :destroy] do
+        collection do
+          get 'map' => 'locations#map'
+        end
+      end
       resource :relationships, only: [:create, :destroy]
     end
     #---offers
     resources :offers, only: [:new, :create, :show, :edit, :update, :index] do
       resource :favorites, only: [:create, :destroy]
-      resources :applications, only: [:new, :create, :show, :destroy, :edit, :update, :index]
     end
     #---deals
     resources :deals, only: [:new, :create, :show, :edit, :update] do
+      resource :applications, only: [:create, :destroy]
+      resource :deal_users, only: [:create, :destroy]
       resource :chattings, only: [:create, :update]
       resources :reviews, only: [:new, :create, :show, :edit, :update]
     end
     resources :notifications, only: [:index]
   end
+end
   ================================================================================================================================
                                   Prefix Verb   URI Pattern                                                                                       Controller#Action
                         new_user_session GET    /users/sign_in(.:format)                                                                          public/sessions#new
@@ -62,7 +65,6 @@
                            admin_session POST   /admin/sign_in(.:format)                                                                          admin/sessions#create
                    destroy_admin_session DELETE /admin/sign_out(.:format)                                                                         admin/sessions#destroy
                              admin_admin GET    /admin/admin(.:format)                                                                            admin/homes#top
-            destroy_comment_admin_offers DELETE /admin/offers/destroy_comment(.:format)                                                           admin/offers#destroy_comment
                             admin_offers GET    /admin/offers(.:format)                                                                           admin/offers#index
                              admin_offer GET    /admin/offers/:id(.:format)                                                                       admin/offers#show
                                          DELETE /admin/offers/:id(.:format)                                                                       admin/offers#destroy
@@ -96,14 +98,6 @@
                                     user GET    /users/:id(.:format)                                                                              public/users#show
                          offer_favorites DELETE /offers/:offer_id/favorites(.:format)                                                             public/favorites#destroy
                                          POST   /offers/:offer_id/favorites(.:format)                                                             public/favorites#create
-                      offer_applications GET    /offers/:offer_id/applications(.:format)                                                          public/applications#index
-                                         POST   /offers/:offer_id/applications(.:format)                                                          public/applications#create
-                   new_offer_application GET    /offers/:offer_id/applications/new(.:format)                                                      public/applications#new
-                  edit_offer_application GET    /offers/:offer_id/applications/:id/edit(.:format)                                                 public/applications#edit
-                       offer_application GET    /offers/:offer_id/applications/:id(.:format)                                                      public/applications#show
-                                         PATCH  /offers/:offer_id/applications/:id(.:format)                                                      public/applications#update
-                                         PUT    /offers/:offer_id/applications/:id(.:format)                                                      public/applications#update
-                                         DELETE /offers/:offer_id/applications/:id(.:format)                                                      public/applications#destroy
                                   offers GET    /offers(.:format)                                                                                 public/offers#index
                                          POST   /offers(.:format)                                                                                 public/offers#create
                                new_offer GET    /offers/new(.:format)                                                                             public/offers#new
@@ -111,6 +105,10 @@
                                    offer GET    /offers/:id(.:format)                                                                             public/offers#show
                                          PATCH  /offers/:id(.:format)                                                                             public/offers#update
                                          PUT    /offers/:id(.:format)                                                                             public/offers#update
+                       deal_applications DELETE /deals/:deal_id/applications(.:format)                                                            public/applications#destroy
+                                         POST   /deals/:deal_id/applications(.:format)                                                            public/applications#create
+                         deal_deal_users DELETE /deals/:deal_id/deal_users(.:format)                                                              public/deal_users#destroy
+                                         POST   /deals/:deal_id/deal_users(.:format)                                                              public/deal_users#create
                           deal_chattings PATCH  /deals/:deal_id/chattings(.:format)                                                               public/chattings#update
                                          PUT    /deals/:deal_id/chattings(.:format)                                                               public/chattings#update
                                          POST   /deals/:deal_id/chattings(.:format)                                                               public/chattings#create
@@ -150,6 +148,9 @@ rails_conductor_inbound_email_incinerate POST   /rails/conductor/action_mailbox/
                rails_blob_representation GET    /rails/active_storage/representations/redirect/:signed_blob_id/:variation_key/*filename(.:format) active_storage/representations/redirect#show
          rails_blob_representation_proxy GET    /rails/active_storage/representations/proxy/:signed_blob_id/:variation_key/*filename(.:format)    active_storage/representations/proxy#show
                                          GET    /rails/active_storage/representations/:signed_blob_id/:variation_key/*filename(.:format)          active_storage/representations/redirect#show
+                      rails_disk_service GET    /rails/active_storage/disk/:encoded_key/*filename(.:format)                                       active_storage/disk#show
+               update_rails_disk_service PUT    /rails/active_storage/disk/:encoded_token(.:format)                                               active_storage/disk#update
+                    rails_direct_uploads POST   /rails/active_storage/direct_uploads(.:format)                                                    active_storage/direct_uploads#create
                       rails_disk_service GET    /rails/active_storage/disk/:encoded_key/*filename(.:format)                                       active_storage/disk#show
                update_rails_disk_service PUT    /rails/active_storage/disk/:encoded_token(.:format)                                               active_storage/disk#update
                     rails_direct_uploads POST   /rails/active_storage/direct_uploads(.:format)                                                    active_storage/direct_uploads#create
