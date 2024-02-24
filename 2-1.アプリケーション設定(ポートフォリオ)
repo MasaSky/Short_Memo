@@ -45,7 +45,11 @@ Rails.application.routes.draw do
         get 'permit' => 'deals#permit', as: 'permits'
       end
       resource :applications, only: [:create, :destroy]
-      resource :deal_users, only: [:create, :destroy]
+      resource :deal_users, only: [:create] do
+        collection do
+          post 'reject' => 'deal_users#reject'
+        end
+      end
       resource :chattings, only: [:create, :update]
       resources :reviews, only: [:new, :create, :show, :edit, :update]
     end
@@ -111,8 +115,8 @@ end
                             permits_deal GET    /deals/:id/permit(.:format)                                                                       public/deals#permit
                        deal_applications DELETE /deals/:deal_id/applications(.:format)                                                            public/applications#destroy
                                          POST   /deals/:deal_id/applications(.:format)                                                            public/applications#create
-                         deal_deal_users DELETE /deals/:deal_id/deal_users(.:format)                                                              public/deal_users#destroy
-                                         POST   /deals/:deal_id/deal_users(.:format)                                                              public/deal_users#create
+                         deal_deal_users POST   /deals/:deal_id/applications(.:format)                                                            public/applications#create
+                  reject_deal_deal_users POST   /deals/:deal_id/deal_users/reject(.:format)                                                       public/deal_users#reject
                           deal_chattings PATCH  /deals/:deal_id/chattings(.:format)                                                               public/chattings#update
                                          PUT    /deals/:deal_id/chattings(.:format)                                                               public/chattings#update
                                          POST   /deals/:deal_id/chattings(.:format)                                                               public/chattings#create
