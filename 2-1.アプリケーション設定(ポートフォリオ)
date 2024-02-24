@@ -84,6 +84,7 @@
                          favorites_users GET    /users/favorites(.:format)                                                                        public/users#favorites
                          followers_users GET    /users/followers(.:format)                                                                        public/users#followers
                            reviews_users GET    /users/reviews(.:format)                                                                          public/users#reviews
+                      map_user_locations GET    /users/:user_id/locations/map(.:format)                                                           public/locations#map
                           user_locations GET    /users/:user_id/locations(.:format)                                                               public/locations#index
                                          POST   /users/:user_id/locations(.:format)                                                               public/locations#create
                       edit_user_location GET    /users/:user_id/locations/:id/edit(.:format)                                                      public/locations#edit
