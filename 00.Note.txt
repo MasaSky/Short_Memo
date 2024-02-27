@@ -1,3 +1,24 @@
+240227-1800
+
+1)rails c
+>>Offer.find(1)
+=>PostされたOfferの#1の情報を呼び出す
+
+>>results = Geocoder.search("Paris")
+=>geocoderがParisの位置情報を返すかどうか確認
+
+2)Ctrl+/ == コメントアウト
+
+3）document.getElementById
+HTML ドキュメント内で指定された ID を持つ要素を取得します。これは、JavaScript で特定の要素にアクセスする最も一般的な方法
+const element = document.getElementById("my-element");
+
+console.log(element.tagName); // "DIV"
+console.log(element.textContent); // "Hello, world!"
+
+4）検証=>コンソール　エラーチェック
+
+
 240222-00
 
 https://qiita.com/fumiya1800/items/25e1bd89b3b4db0bd3f1
