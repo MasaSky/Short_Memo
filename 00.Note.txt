@@ -1,3 +1,32 @@
+def create
+  @order = Order.new(order_params)
+
+  case params[:order][:select_address]
+  when "0"
+    @order.assign_attributes(
+      postal_code: current_end_user.try(:postal_code),
+      address: current_end_user.try(:address),
+      name: "#{current_end_user.try(:first_name)} #{current_end_user.try(:last_name)}"
+    )
+  when "1"
+    @address = Address.find_by(id: params[:order][:address_id])
+    @order.assign_attributes(@address.attributes) if @address
+  when "2"
+    @order.end_user_id = current_end_user.id
+  end
+
+  @cart_items = current_end_user.cart_items
+  @order.save!  # Use save! with appropriate rescue block for validation errors
+
+  @order_new = Order.new
+
+  redirect_to :complete 
+end
+
+
+
+
+
 
 application = current_user.application.new(offer_id: params[offer_id], deal_id: params[offer_id])
 
