@@ -1,4 +1,9 @@
 
+application = current_user.application.new(offer_id: params[offer_id], deal_id: params[offer_id])
+
+
+
+
 lookup: :google,
 
 
