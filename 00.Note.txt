@@ -1,4 +1,7 @@
 
+lookup: :google,
+
+
 https://qiita.com/tiri/items/df5d7a5d4057a8460b89
 
 https://zenn.dev/airiin/articles/7339600a62c7c0
