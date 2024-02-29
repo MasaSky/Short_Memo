@@ -8,6 +8,12 @@
 
 他のユーザーがレビューを参考にできるように、userのshowにも一覧表示できるようにする。
 
+レビューにattention（deal_user）とcommentを用意。星レビュー機能予定。
+
+https://zenn.dev/goldsaya/articles/2746dd2b886be0
+
+https://qiita.com/Ryo-0131/items/63e81b13b9382690bee4
+
 
 240229-00
 
