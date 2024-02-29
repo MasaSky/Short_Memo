@@ -1,3 +1,17 @@
+
+240229-00
+
+<% @applications.each do |of| %>
+  <% user = @user %>
+  <tr>
+    ...
+    <td><%= user.application.applocation_status(of) %></td>
+    ...
+  </tr>
+<% end %>
+
+240228-00
+
 def create
   @order = Order.new(order_params)
 
