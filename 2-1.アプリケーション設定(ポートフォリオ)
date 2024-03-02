@@ -34,19 +34,23 @@ Rails.application.routes.draw do
     #---offers
     resources :offers, only: [:new, :create, :show, :edit, :update, :index] do
       resource :favorites, only: [:create, :destroy]
-      resource :applications, only: [:create, :destroy]
+      resource :applications, only: [:create, :destroy] do
+        collection do
+          patch 'confirm' => 'applications#confirm'
+        end
+      end
     end
     #---deals
-    resources :deals, only: [:create, :show, :edit, :update] do
+    resources :deals, only: [:show, :edit, :update] do
       member do
         get 'permits' => 'deals#permits', as: 'permits'
       end
       resource :deal_users, only: [:create] do
         collection do
-          post 'reject' => 'deal_users#reject'
+          patch 'reject' => 'deal_users#reject'
         end
       end
-      resource :chattings, only: [:create, :update]
+      resources :chattings, only: [:create, :update]
       resources :reviews, only: [:new, :create, :show, :edit, :update]
     end
     resources :notifications, only: [:index]
@@ -100,6 +104,7 @@ end
                                     user GET    /users/:id(.:format)                                                                              public/users#show
                          offer_favorites DELETE /offers/:offer_id/favorites(.:format)                                                             public/favorites#destroy
                                          POST   /offers/:offer_id/favorites(.:format)                                                             public/favorites#create
+              confirm_offer_applications PATCH  /offers/:offer_id/applications/confirm(.:format)                                                  public/applications#confirm
                       offer_applications DELETE /offers/:offer_id/applications(.:format)                                                          public/applications#destroy
                                          POST   /offers/:offer_id/applications(.:format)                                                          public/applications#create
                                   offers GET    /offers(.:format)                                                                                 public/offers#index
@@ -110,18 +115,17 @@ end
                                          PATCH  /offers/:id(.:format)                                                                             public/offers#update
                                          PUT    /offers/:id(.:format)                                                                             public/offers#update
                             permits_deal GET    /deals/:id/permits(.:format)                                                                      public/deals#permits
-                  reject_deal_deal_users POST   /deals/:deal_id/deal_users/reject(.:format)                                                       public/deal_users#reject
+                  reject_deal_deal_users PATCH  /deals/:deal_id/deal_users/reject(.:format)                                                       public/deal_users#reject
                          deal_deal_users POST   /deals/:deal_id/deal_users(.:format)                                                              public/deal_users#create
-                          deal_chattings PATCH  /deals/:deal_id/chattings(.:format)                                                               public/chattings#update
-                                         PUT    /deals/:deal_id/chattings(.:format)                                                               public/chattings#update
-                                         POST   /deals/:deal_id/chattings(.:format)                                                               public/chattings#create
+                          deal_chattings POST   /deals/:deal_id/chattings(.:format)                                                               public/chattings#create
+                           deal_chatting PATCH  /deals/:deal_id/chattings/:id(.:format)                                                           public/chattings#update
+                                         PUT    /deals/:deal_id/chattings/:id(.:format)                                                           public/chattings#update
                             deal_reviews POST   /deals/:deal_id/reviews(.:format)                                                                 public/reviews#create
                          new_deal_review GET    /deals/:deal_id/reviews/new(.:format)                                                             public/reviews#new
                         edit_deal_review GET    /deals/:deal_id/reviews/:id/edit(.:format)                                                        public/reviews#edit
                              deal_review GET    /deals/:deal_id/reviews/:id(.:format)                                                             public/reviews#show
                                          PATCH  /deals/:deal_id/reviews/:id(.:format)                                                             public/reviews#update
                                          PUT    /deals/:deal_id/reviews/:id(.:format)                                                             public/reviews#update
-                                   deals POST   /deals(.:format)                                                                                  public/deals#create
                                edit_deal GET    /deals/:id/edit(.:format)                                                                         public/deals#edit
                                     deal GET    /deals/:id(.:format)                                                                              public/deals#show
                                          PATCH  /deals/:id(.:format)                                                                              public/deals#update
@@ -151,7 +155,5 @@ rails_conductor_inbound_email_incinerate POST   /rails/conductor/action_mailbox/
          rails_blob_representation_proxy GET    /rails/active_storage/representations/proxy/:signed_blob_id/:variation_key/*filename(.:format)    active_storage/representations/proxy#show
                                          GET    /rails/active_storage/representations/:signed_blob_id/:variation_key/*filename(.:format)          active_storage/representations/redirect#show
                       rails_disk_service GET    /rails/active_storage/disk/:encoded_key/*filename(.:format)                                       active_storage/disk#show
-               update_rails_disk_service PUT    /rails/active_storage/disk/:encoded_token(.:format)                                               active_storage/disk#update
-                    rails_direct_uploads POST   /rails/active_storage/direct_uploads(.:format)                                                    active_storage/direct_uploads#create
                update_rails_disk_service PUT    /rails/active_storage/disk/:encoded_token(.:format)                                               active_storage/disk#update
                     rails_direct_uploads POST   /rails/active_storage/direct_uploads(.:format)                                                    active_storage/direct_uploads#create
