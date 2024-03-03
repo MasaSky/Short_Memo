@@ -50,8 +50,8 @@ Rails.application.routes.draw do
           patch 'reject' => 'deal_users#reject'
         end
       end
-      resources :chattings, only: [:create, :update]
-      resources :reviews, only: [:new, :create, :show, :edit, :update]
+      resources :chattings, only: [:create, :destroy]
+      resource :reviews, only: [:create, :destroy]
     end
     resources :notifications, only: [:index]
   end
@@ -118,14 +118,9 @@ end
                   reject_deal_deal_users PATCH  /deals/:deal_id/deal_users/reject(.:format)                                                       public/deal_users#reject
                          deal_deal_users POST   /deals/:deal_id/deal_users(.:format)                                                              public/deal_users#create
                           deal_chattings POST   /deals/:deal_id/chattings(.:format)                                                               public/chattings#create
-                           deal_chatting PATCH  /deals/:deal_id/chattings/:id(.:format)                                                           public/chattings#update
-                                         PUT    /deals/:deal_id/chattings/:id(.:format)                                                           public/chattings#update
-                            deal_reviews POST   /deals/:deal_id/reviews(.:format)                                                                 public/reviews#create
-                         new_deal_review GET    /deals/:deal_id/reviews/new(.:format)                                                             public/reviews#new
-                        edit_deal_review GET    /deals/:deal_id/reviews/:id/edit(.:format)                                                        public/reviews#edit
-                             deal_review GET    /deals/:deal_id/reviews/:id(.:format)                                                             public/reviews#show
-                                         PATCH  /deals/:deal_id/reviews/:id(.:format)                                                             public/reviews#update
-                                         PUT    /deals/:deal_id/reviews/:id(.:format)                                                             public/reviews#update
+                           deal_chatting DELETE /deals/:deal_id/chattings/:id(.:format)                                                           public/chattings#destroy
+                            deal_reviews DELETE /deals/:deal_id/reviews(.:format)                                                                 public/reviews#destroy
+                                         POST   /deals/:deal_id/reviews(.:format)                                                                 public/reviews#create
                                edit_deal GET    /deals/:id/edit(.:format)                                                                         public/deals#edit
                                     deal GET    /deals/:id(.:format)                                                                              public/deals#show
                                          PATCH  /deals/:id(.:format)                                                                              public/deals#update
