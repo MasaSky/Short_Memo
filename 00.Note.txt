@@ -1,3 +1,16 @@
+240321-00
+
+Rspec
+
+https://qiita.com/ukwhatn/items/468d2ee700f79b7c5587
+
+
+
+>>> bundle exec rspec spec/ --format documentation
+
+
+
+
 
 240229-01
 
