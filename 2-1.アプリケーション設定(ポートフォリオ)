@@ -71,17 +71,19 @@ end
                        new_admin_session GET    /admin/sign_in(.:format)                                                                          admin/sessions#new
                            admin_session POST   /admin/sign_in(.:format)                                                                          admin/sessions#create
                    destroy_admin_session DELETE /admin/sign_out(.:format)                                                                         admin/sessions#destroy
-                             admin_admin GET    /admin/admin(.:format)                                                                            admin/homes#top
+                         admin_dashboard GET    /admin/dashboard(.:format)                                                                        admin/homes#top
+                     search_admin_offers GET    /admin/offers/search_word(.:format)                                                               admin/offers#search_word
                             admin_offers GET    /admin/offers(.:format)                                                                           admin/offers#index
                              admin_offer GET    /admin/offers/:id(.:format)                                                                       admin/offers#show
                                          DELETE /admin/offers/:id(.:format)                                                                       admin/offers#destroy
                              admin_users GET    /admin/users(.:format)                                                                            admin/users#index
-                         edit_admin_user GET    /admin/users/:id/edit(.:format)                                                                   admin/users#edit
                               admin_user GET    /admin/users/:id(.:format)                                                                        admin/users#show
                                          PATCH  /admin/users/:id(.:format)                                                                        admin/users#update
                                          PUT    /admin/users/:id(.:format)                                                                        admin/users#update
                                     root GET    /                                                                                                 public/homes#top
+                           guest_sign_in POST   /guest_sign_in(.:format)                                                                          public/homes#guest_sign_in
                                    about GET    /about(.:format)                                                                                  public/homes#about
+                            search_users GET    /search_users(.:format)                                                                           public/searches#search_users
                               info_users GET    /users/info(.:format)                                                                             public/users#info
                          info_edit_users GET    /users/info/edit(.:format)                                                                        public/users#edit
                        info_update_users PATCH  /users/info/update(.:format)                                                                      public/users#update
@@ -93,6 +95,7 @@ end
                          favorites_users GET    /users/favorites(.:format)                                                                        public/users#favorites
                          followers_users GET    /users/followers(.:format)                                                                        public/users#followers
                            reviews_users GET    /users/reviews(.:format)                                                                          public/users#reviews
+                        followings_users GET    /users/followings(.:format)                                                                       public/users#followings
                           user_locations GET    /users/:user_id/locations(.:format)                                                               public/locations#index
                                          POST   /users/:user_id/locations(.:format)                                                               public/locations#create
                       edit_user_location GET    /users/:user_id/locations/:id/edit(.:format)                                                      public/locations#edit
@@ -102,6 +105,7 @@ end
                       user_relationships DELETE /users/:user_id/relationships(.:format)                                                           public/relationships#destroy
                                          POST   /users/:user_id/relationships(.:format)                                                           public/relationships#create
                                     user GET    /users/:id(.:format)                                                                              public/users#show
+                           search_offers GET    /offers/search_word(.:format)                                                                     public/offers#search_word
                          offer_favorites DELETE /offers/:offer_id/favorites(.:format)                                                             public/favorites#destroy
                                          POST   /offers/:offer_id/favorites(.:format)                                                             public/favorites#create
               confirm_offer_applications PATCH  /offers/:offer_id/applications/confirm(.:format)                                                  public/applications#confirm
@@ -119,13 +123,16 @@ end
                          deal_deal_users POST   /deals/:deal_id/deal_users(.:format)                                                              public/deal_users#create
                           deal_chattings POST   /deals/:deal_id/chattings(.:format)                                                               public/chattings#create
                            deal_chatting DELETE /deals/:deal_id/chattings/:id(.:format)                                                           public/chattings#destroy
-                            deal_reviews DELETE /deals/:deal_id/reviews(.:format)                                                                 public/reviews#destroy
+                       edit_deal_reviews GET    /deals/:deal_id/reviews/edit(.:format)                                                            public/reviews#edit
+                            deal_reviews PATCH  /deals/:deal_id/reviews(.:format)                                                                 public/reviews#update
+                                         PUT    /deals/:deal_id/reviews(.:format)                                                                 public/reviews#update
                                          POST   /deals/:deal_id/reviews(.:format)                                                                 public/reviews#create
                                edit_deal GET    /deals/:id/edit(.:format)                                                                         public/deals#edit
                                     deal GET    /deals/:id(.:format)                                                                              public/deals#show
                                          PATCH  /deals/:id(.:format)                                                                              public/deals#update
                                          PUT    /deals/:id(.:format)                                                                              public/deals#update
-                           notifications GET    /notifications(.:format)                                                                          public/notifications#index
+                      read_notifications DELETE /notifications/read(.:format)                                                                     public/notifications#read
+                            notification DELETE /notifications/:id(.:format)                                                                      public/notifications#destroy
         turbo_recede_historical_location GET    /recede_historical_location(.:format)                                                             turbo/native/navigation#recede
         turbo_resume_historical_location GET    /resume_historical_location(.:format)                                                             turbo/native/navigation#resume
        turbo_refresh_historical_location GET    /refresh_historical_location(.:format)                                                            turbo/native/navigation#refresh
