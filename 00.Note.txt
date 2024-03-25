@@ -1,6 +1,6 @@
 240325-00
 
-ssh -i ~/.ssh/dmm-aws.pem ec2-user@52.195.15.242
+ssh -i ~/.ssh/dmm-aws.pem ec2-user@52.195.16.82
 
 
 
