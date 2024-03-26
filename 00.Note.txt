@@ -2,6 +2,8 @@
 
 ssh -i ~/.ssh/dmm-aws.pem ec2-user@52.195.16.82
 
+scp -i ~/.ssh/dmm-aws.pem .env ec2-user@52.195.16.82:Oshi-Got/
+
 
 
 240321-00
