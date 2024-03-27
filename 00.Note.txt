@@ -1,10 +1,10 @@
 240325-00
 
-ssh -i ~/.ssh/dmm-aws.pem ec2-user@52.195.16.82
+ssh -i ~/.ssh/dmm-aws.pem ec2-user@3.112.108.208
 
-scp -i ~/.ssh/dmm-aws.pem .env ec2-user@52.195.16.82:Oshi-Got/
+scp -i ~/.ssh/dmm-aws.pem .env ec2-user@3.112.108.208:Oshi-Got/
 
-scp -i ~/.ssh/dmm-aws.pem config/master.key ec2-user@52.195.16.82:Oshi-Got/config config/master.key: No such file or directory
+scp -i ~/.ssh/dmm-aws.pem config/master.key ec2-user@3.112.108.208:Oshi-Got/config
 
 
 
