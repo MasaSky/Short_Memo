@@ -1,16 +1,16 @@
 240327-00
 
-[ec2-user@ip-xx-xx-xx-xx アプリケーション名]$ RAILS_ENV=production DISABLE_DATABASE_ENVIRONMENT_CHECK=1 bundle exec rails db:drop
-[ec2-user@ip-xx-xx-xx-xx アプリケーション名]$ rails db:create RAILS_ENV=production
-[ec2-user@ip-xx-xx-xx-xx アプリケーション名]$ rails db:migrate RAILS_ENV=production
+kill $(cat tmp/pids/puma.pid)
 
-[ec2-user@ip-xx-xx-xx-xx アプリケーション名]$ bundle exec rails db:migrate RAILS_ENV=production
+RAILS_ENV=production DISABLE_DATABASE_ENVIRONMENT_CHECK=1 bundle exec rails db:drop
+rails db:create RAILS_ENV=production
+rails db:migrate RAILS_ENV=production
+
+rails db:seed RAILS_ENV=production
 
 rails s -e production
 
 kill $(cat tmp/pids/puma.pid)
-
-rails db:seed RAILS_ENV=production
 
 
 
