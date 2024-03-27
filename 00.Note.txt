@@ -10,6 +10,8 @@ rails s -e production
 
 kill $(cat tmp/pids/puma.pid)
 
+rails db:seed RAILS_ENV=production
+
 
 
 
