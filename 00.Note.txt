@@ -4,6 +4,8 @@ ssh -i ~/.ssh/dmm-aws.pem ec2-user@52.195.16.82
 
 scp -i ~/.ssh/dmm-aws.pem .env ec2-user@52.195.16.82:Oshi-Got/
 
+scp -i ~/.ssh/dmm-aws.pem config/master.key ec2-user@52.195.16.82:Oshi-Got/config config/master.key: No such file or directory
+
 
 
 240321-00
